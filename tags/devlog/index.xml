@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Devlog on Kevin Young</title><link>https://youngk.me/tags/devlog/</link><description>Recent content in Devlog on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 06 Nov 2022 14:01:46 -0500</lastBuildDate><atom:link href="https://youngk.me/tags/devlog/index.xml" rel="self" type="application/rss+xml"/><item><title>A new space for snake</title><link>https://youngk.me/blog/micro-snake-3/</link><pubDate>Sun, 06 Nov 2022 14:01:46 -0500</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/blog/micro-snake-3/</guid><description>Oh yeah. We&amp;rsquo;re rollin now. Bug fixes and new state trigger logic!
+Diagonal movement bug Had to change the movement vector code to fix a bug that would allow the player to move in diagonals&amp;hellip; which kind of breaks the whole rule set of Snake now doesn&amp;rsquo;t it. This is because the Input.get_vector() func will create a vector based on all inputs it recieves. Good for some games like top down 2d or 3d games, not good for snake.</description><content:encoded><![CDATA[<p>Oh yeah. We&rsquo;re rollin now. Bug fixes and new state trigger logic!</p>
+<h2 id="diagonal-movement-bug">Diagonal movement bug</h2>
+<p>Had to change the movement vector code to fix a bug that would allow the player to move in diagonals&hellip; which kind of breaks the whole rule set of Snake now doesn&rsquo;t it. This is because the <code>Input.get_vector()</code> func will create a vector based on all inputs it recieves. Good for some games like top down 2d or 3d games, not good for snake.</p>
+
+
+
+
+
+<pre tabindex="0"><code># Snake.gd
+
+...
+func _process(_delta):
+	if Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;) != Vector2.ZERO:
+		if manager.current_state == GlobalVars.State.PAUSE :
+			manager.set_state(GlobalVars.State.PLAY)
+	if Input.is_action_just_pressed(&#34;left&#34;):
+		input_buffer = Vector2(-1, 0)
+	elif Input.is_action_just_pressed(&#34;right&#34;):
+		input_buffer = Vector2(1, 0)
+	elif Input.is_action_just_pressed(&#34;up&#34;):
+		input_buffer = Vector2(0, -1)
+	elif Input.is_action_just_pressed(&#34;down&#34;):
+		input_buffer = Vector2(0, 1)
+...</code></pre><p>So I unfortunately had to break up my nice neatly coded movement code into a sequence of if statements, while still keeping the <code>get_vector</code> for detecting an input to start the game. I&rsquo;m sure theres a hip way to consolidate this but for now this&rsquo;ll do.</p>
+<h2 id="dead-snake">Dead snake</h2>
+<p>To detect if the snake&rsquo;s head has made contact with the snake&rsquo;s tail, I just added a <code>CollisionArea2d</code> to the <code>SnakeTail.tscn</code>, and add the following code to connect the <code>body_entered</code> signal.</p>
+
+
+
+
+
+<pre tabindex="0"><code># SnakeTail.gd
+
+extends StaticBody2D
+
+@onready var col_area = $CollisionArea
+@onready var manager = get_parent()
+
+func _ready():
+	col_area.body_entered.connect(_on_area_2d_body_entered)
+
+func _on_area_2d_body_entered(body):
+	if body.is_in_group(&#34;SnakeHead&#34;):
+		manager.set_state(GlobalVars.State.DEAD)</code></pre><p>I added the SnakeHead node to a group &ldquo;SnakeHead&rdquo; as a lazy check, I&rsquo;ll admit. This may change later if I find it stupid but it works well enough for now.</p>
+<h3 id="play-area-changes">Play area changes</h3>
+<p>As you can see from the header image, its pretty minimal. I added a new <code>TileMap</code> layer for the &ldquo;frame&rdquo;, so the playarea does not end up being massive and take forever to traverse, and I can also decorate it later if I want / when I choose a final visual style. Overall a simple but pleasing enhancement from the janky floating window with dimensions that were slightly off from the <code>TileMap</code> :D</p>
+<h3 id="detecting-wall-collision">Detecting wall collision</h3>
+<p>Ideally, in Godot 4 I could simply add a physics collision layer to the <code>TileMap</code>. However, because I&rsquo;ve chosen not to use any physics based movement, I don&rsquo;t think this is possible.</p>
+<p>The good news is, since I&rsquo;m already storing the coordinates for all the cells that make up the playarea, all I need to do is check to see if the cell that the snake&rsquo;s head is about to move into is going to have an x or y value greater or less than the maximum x or y values used for the playarea.</p>
+
+
+
+
+
+<pre tabindex="0"><code># GameManager.gd
+
+...
+func _ready():
+	bg_layer_coords = grid.get_used_cells(1)
+	min_nav_x_y = bg_layer_coords[0]
+	max_nav_x_y = bg_layer_coords[bg_layer_coords.size() - 1]
+	
+...
+
+func is_in_boundaries(grid_coord):
+	if (min_nav_x_y.x &lt; grid_coord.x) and (max_nav_x_y.x &gt; grid_coord.x):
+		if (min_nav_x_y.y &lt; grid_coord.y) and (max_nav_x_y.y &gt; grid_coord.y):
+			return true
+	return false
+...</code></pre><p>This function gets called in the <code>_timer_timeout()</code> func.</p>
+
+
+
+
+
+<pre tabindex="0"><code># GameManager.gd
+
+...
+func _timer_timeout():
+...
+	if snake.grid_coords.size() &gt; snake.body_segments.size() :
+		update_snake()
+	for s in range(snake.grid_coords.size()):
+		if s == 0:
+			if !is_in_boundaries(snake.grid_coords[s]):
+				set_state(GlobalVars.State.DEAD)
+...</code></pre><p><em>So close I can almost smell the polishing phase.</em></p>
+]]></content:encoded></item></channel></rss>

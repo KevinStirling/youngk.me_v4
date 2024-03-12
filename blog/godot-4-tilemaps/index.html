@@ -1,0 +1,60 @@
+<!doctype html><html lang=en-US><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://youngk.me/images/favicon.png><title>Learning Godot 4 Tilemaps via Snake | Kevin Young</title>
+<meta name=title content="Learning Godot 4 Tilemaps via Snake"><meta name=description content="Look at that bad boy shmove"><meta name=keywords content="godot4,"><meta property="og:title" content="Learning Godot 4 Tilemaps via Snake"><meta property="og:description" content="Look at that bad boy shmove"><meta property="og:type" content="article"><meta property="og:url" content="https://youngk.me/blog/godot-4-tilemaps/"><meta property="og:image" content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_1b8fe316fbafc6e8f0c063b1867652fd.webp"><meta property="article:section" content="blog"><meta property="article:published_time" content="2022-10-30T17:29:03-04:00"><meta property="article:modified_time" content="2022-10-30T17:29:03-04:00"><meta property="og:site_name" content="Kevin Young"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_1b8fe316fbafc6e8f0c063b1867652fd.webp"><meta name=twitter:title content="Learning Godot 4 Tilemaps via Snake"><meta name=twitter:description content="Look at that bad boy shmove"><meta itemprop=name content="Learning Godot 4 Tilemaps via Snake"><meta itemprop=description content="Look at that bad boy shmove"><meta itemprop=datePublished content="2022-10-30T17:29:03-04:00"><meta itemprop=dateModified content="2022-10-30T17:29:03-04:00"><meta itemprop=wordCount content="877"><meta itemprop=image content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_1b8fe316fbafc6e8f0c063b1867652fd.webp"><meta itemprop=keywords content="godot4,"><meta name=referrer content="no-referrer-when-downgrade"><link href=/original.min.css rel=stylesheet><link href=/syntax.min.css rel=stylesheet></head><body><header><a class=skip-link href=#main-content>Skip to main content</a>
+<img src=../../images/avatar.png width=100>
+<a href=/ class=title><h1>Kevin Young</h1></a><nav><a href=/>Home</a>
+<a href=/projects/>Projects</a>
+<a href=/blog/>Blog</a>
+<a href=https://youngk.me/index.xml>RSS</a></nav></header><main id=main-content><h1>Learning Godot 4 Tilemaps via Snake</h1><p class=byline><time datetime=2022-10-30 pubdate>2022-10-30</time></p><content><p>With Godot 4 now in beta, I&rsquo;ve been starting to mess around with the new kit. And although there&rsquo;s a lot of really exciting 3d features coming to Godot 4, the 2d space is a bit more in my wheelhouse for now, as I continue to learn the engine.</p><p>One new feature I am looking forward to using in Godot 4 2d is the new <code>TileMap</code> node updates. To get myself farmiliar with the new <code>TileMap</code> api, I wanted a project that would let me dip my toes into this node, but I also wanted a project that had a small scope and ideally I wouldn&rsquo;t have to think up rules or functionality from scratch. So, I chose to remake Snake, using a <code>TileMap</code> as my main playarea!</p><h2 id=concept>Concept</h2><p>While this isn&rsquo;t really going to be using many of the new features of <code>TileMap</code>, most of it is new to me anyway as a Godot noob. The idea is to use the <code>TileMap</code> as a grid for the play space. The snake the player controls is made up of a series of grid squares, and every <code>x</code> seconds, the snake moves one grid square in the direction the snake is pointing, which is determined by input that is buffered between the movement timer&rsquo;s timeout duration.</p><h2 id=on-the-grid>On the grid</h2><p>The main scene contains a <code>TileMap</code> and a <code>Timer</code> node, underneath the parent <code>Node2d</code>, which has a script attached called <code>GameManager.gd</code>. The <code>TileMap</code> being the play area, and the <code>Timer</code> being the amount of time between each movement of the snake, which I currently have set to .5 seconds.</p><p>Using the <code>TileMap</code> node&rsquo;s Layer system, I am able to split the background layer from the snake. This way, when I&rsquo;m modifying grid squares of the <code>TileMap</code> to show the snake move, I don&rsquo;t need to worry about redrawing the background.</p><p><img alt=tilemap_layer src=/images/posts/tilemap_layer.png title=tilemap></p><p>I created a <code>Snake</code> scene and added a <code>Snake.gd</code> script to the root <code>StaticBody2d</code> node, as well as adding a <code>Sprite2d</code> and <code>CollisionShape2d</code> of course.</p><p>Here&rsquo;s what that script looks like at the moment for just covering the movement.</p><pre tabindex=0><code># Snake.gd
+
+extends StaticBody2D
+
+@onready var manager = get_parent()
+
+var input_buffer := Vector2.ZERO
+
+var grid_coords := [Vector2(21, 22), Vector2(22,22), Vector2(23,22), Vector2(24,22)]
+var body_segments: Array
+
+func _process(_delta):
+	if Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;) != Vector2.ZERO:
+		input_buffer = Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;)</code></pre><p>It&rsquo;s a little different from a basic 2d game set up, since I&rsquo;m not moving the player kinematically, hence the <code>StaticBody2d</code> node. I&rsquo;m just storing the vector from <code>Input.get_vector</code>, and using that to influce the direction the snake will move on the timer&rsquo;s timeout duration. The <code>grid_coords</code> is an array that will be storing the position of each snake segment position on the <code>TileMap</code>. Which leads me to the <code>SnakeTail</code> scene&mldr;. which is actually pretty much identical to the <code>Snake</code> scene at the moment, just without a script and a different sprite. For now it is just serving the purpose of being an instanced scene.</p><p>Now to tie it all together in the <code>GameManager.gd</code> script.</p><pre tabindex=0><code># GameManager.gd
+
+extends Node2D
+
+@onready var grid = $TileMap;
+@onready var timer = $Timer;
+@onready var snake_head = preload(&#34;res://Snake/Snake.tscn&#34;);
+@onready var snake_segment = preload(&#34;res://Snake/SnakeTail.tscn&#34;);
+
+var snake
+
+func _ready():
+	timer.timeout.connect(_timer_timeout)
+	snake = snake_head.instantiate()
+	for s in range(snake.grid_coords.size()):
+		if s == 0:
+			add_child(snake)
+			snake.position = grid.map_to_local(snake.grid_coords[s])
+			snake.body_segments.push_front(snake)
+		else:
+			var current_segment = snake_segment.instantiate()
+			add_child(current_segment)
+			current_segment.position = grid.map_to_local(snake.grid_coords[s])
+			snake.body_segments.append(current_segment)
+	timer.start()
+
+func _timer_timeout():
+	var segment_next
+	var segment_previous
+	for s in range(snake.grid_coords.size()):
+		if s == 0:
+			segment_next = snake.grid_coords[s]
+			snake.grid_coords[s] = snake.grid_coords[s] + snake.input_buffer
+			snake.position = grid.map_to_local(snake.grid_coords[s])
+		else:
+			grid.erase_cell(1, snake.grid_coords[s])
+			segment_previous = snake.grid_coords[s]
+			snake.grid_coords[s] = segment_next
+			snake.body_segments[s].position = grid.map_to_local(snake.grid_coords[s])
+			segment_next = segment_previous
+		timer.start()</code></pre><p>Basically, in the <code>_ready</code> func we set up the snake by instancing all of the body parts from the <code>Vector2</code>&rsquo;s that are stored in the <code>Snake</code> scene&rsquo;s <code>grid_coords</code> array. To make things easy, the snake&rsquo;s head is always position <code>0</code> of the array, and the rest of the snake tail segments are added in sequential order. For both the snake head and body segments, instances of each scene are created for each of the <code>Vector2</code>&rsquo;s in <code>grid_coords</code>, and pushed to the <code>Snake</code> scene&rsquo;s <code>body_segments</code> array. Since they are in sequential order, we know that <code>grid_coords[2]</code> is the position of the instanced scene stored in <code>body_segments[2]</code>. Ain&rsquo;t that fun.</p><p>Here you can see some of the <code>TileMap</code> api coming into play, utilizing the <code>map_to_local(Vector2i)</code> func, which takes a <code>Vector2</code> and returns the cenetered position of the cell in the <code>TileMap</code>&rsquo;s local coordinate space. We do this to prvent the snake&rsquo;s sprites being off center on the grid, which would make things confusing when we start moving things around and adding pick up items to the <code>TileMap</code>.</p><p>Then, to actually move this bad boy, we connect the timer&rsquo;s timeout signal. When the <code>Timer</code> times out, the signal will call the <code>_timer_timeout()</code> func, and start to shift the position of the snake&rsquo;s head stored in <code>grid_coord</code> by adding the <code>input_vector</code> to it&rsquo;s current position <code>Vector2</code>. Then we just use the previous position of the snake&rsquo;s head as the position of the next object in <code>grid_coords</code>, and do the same for each body segment.</p><p><img alt=snek_move src=/images/posts/snek.gif title=snek></p><p>And that&rsquo;s it for basic movement! Next up is adding some basic state management, and adding the apple pickup item so you can grow up to be a nice big snake.</p></content><p><a class=blog-tags href=/tags/godot4/>#godot4</a></p><p><a href='mailto:youngks93@gmail.com?subject=Reply%20to%20"Learning%20Godot%204%20Tilemaps%20via%20Snake"'>Reply to this post by email ↪</a></p></main><footer><small>Kevin Young | Made with <a href=https://github.com/clente/hugo-bearcub>Bear Cub</a></small></footer></body></html>
