@@ -26,7 +26,7 @@ I created a `Snake` scene and added a `Snake.gd` script to the root `StaticBody2
 
 Here's what that script looks like at the moment for just covering the movement.
 
-```
+{{< highlight gd >}}
 # Snake.gd
 
 extends StaticBody2D
@@ -42,13 +42,13 @@ func _process(_delta):
 	if Input.get_vector("left", "right", "up", "down") != Vector2.ZERO:
 		input_buffer = Input.get_vector("left", "right", "up", "down")
 
-```
+{{</ highlight >}}
 
 It's a little different from a basic 2d game set up, since I'm not moving the player kinematically, hence the `StaticBody2d` node. I'm just storing the vector from `Input.get_vector`, and using that to influce the direction the snake will move on the timer's timeout duration. The `grid_coords` is an array that will be storing the position of each snake segment position on the `TileMap`. Which leads me to the `SnakeTail` scene.... which is actually pretty much identical to the `Snake` scene at the moment, just without a script and a different sprite. For now it is just serving the purpose of being an instanced scene.
 
 Now to tie it all together in the `GameManager.gd` script.
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 extends Node2D
@@ -90,7 +90,7 @@ func _timer_timeout():
 			snake.body_segments[s].position = grid.map_to_local(snake.grid_coords[s])
 			segment_next = segment_previous
 		timer.start()
-```
+{{</ highlight >}}
 
 Basically, in the `_ready` func we set up the snake by instancing all of the body parts from the `Vector2`'s that are stored in the `Snake` scene's `grid_coords` array. To make things easy, the snake's head is always position `0` of the array, and the rest of the snake tail segments are added in sequential order. For both the snake head and body segments, instances of each scene are created for each of the `Vector2`'s in `grid_coords`, and pushed to the `Snake` scene's `body_segments` array. Since they are in sequential order, we know that `grid_coords[2]` is the position of the instanced scene stored in `body_segments[2]`. Ain't that fun.
 

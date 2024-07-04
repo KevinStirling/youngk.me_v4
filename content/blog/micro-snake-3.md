@@ -12,7 +12,7 @@ Oh yeah. We're rollin now. Bug fixes and new state trigger logic!
 ## Diagonal movement bug
 Had to change the movement vector code to fix a bug that would allow the player to move in diagonals... which kind of breaks the whole rule set of Snake now doesn't it. This is because the `Input.get_vector()` func will create a vector based on all inputs it recieves. Good for some games like top down 2d or 3d games, not good for snake.
 
-```
+{{< highlight gd >}}
 # Snake.gd
 
 ...
@@ -29,16 +29,15 @@ func _process(_delta):
 	elif Input.is_action_just_pressed("down"):
 		input_buffer = Vector2(0, 1)
 ...
-```
+{{</ highlight >}}
 
 So I unfortunately had to break up my nice neatly coded movement code into a sequence of if statements, while still keeping the `get_vector` for detecting an input to start the game. I'm sure theres a hip way to consolidate this but for now this'll do.
 
 ## Dead snake
 To detect if the snake's head has made contact with the snake's tail, I just added a `CollisionArea2d` to the `SnakeTail.tscn`, and add the following code to connect the `body_entered` signal.
 
-```
+{{< highlight gd >}}
 # SnakeTail.gd
-
 extends StaticBody2D
 
 @onready var col_area = $CollisionArea
@@ -50,7 +49,7 @@ func _ready():
 func _on_area_2d_body_entered(body):
 	if body.is_in_group("SnakeHead"):
 		manager.set_state(GlobalVars.State.DEAD)
-```
+{{< /highlight >}}
 
 I added the SnakeHead node to a group "SnakeHead" as a lazy check, I'll admit. This may change later if I find it stupid but it works well enough for now.
 
@@ -63,7 +62,7 @@ Ideally, in Godot 4 I could simply add a physics collision layer to the `TileMap
 
 The good news is, since I'm already storing the coordinates for all the cells that make up the playarea, all I need to do is check to see if the cell that the snake's head is about to move into is going to have an x or y value greater or less than the maximum x or y values used for the playarea.
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 ...
@@ -80,11 +79,11 @@ func is_in_boundaries(grid_coord):
 			return true
 	return false
 ...
-```
+{{</ highlight >}}
 
 This function gets called in the `_timer_timeout()` func.
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 ...
@@ -97,6 +96,6 @@ func _timer_timeout():
 			if !is_in_boundaries(snake.grid_coords[s]):
 				set_state(GlobalVars.State.DEAD)
 ...
-```
+{{</ highlight >}}
 
 _So close I can almost smell the polishing phase._

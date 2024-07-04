@@ -12,7 +12,7 @@ Before tackling any new features, I wanted to make sure I atleast had a super ba
 
 This is pretty much as simple as you can get, which I think fits for the tiny scope of this project. For now this is what that looks like
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 ...
@@ -29,13 +29,13 @@ func set_state(new_state: GlobalVars.State):
 		GlobalVars.State.DEAD:
 			timer.stop()
 ...
-```
+{{</ highlight >}}
 
 As you can see, it really only needs to manage the timer for now.
 
 `GlobalVars.gd` is an autoloaded file that simply has an enum called State.
 
-```
+{{< highlight gd >}}
 # GlobalVars.gd
 
 extends Node
@@ -45,11 +45,11 @@ enum State {
 	PLAY,
 	DEAD
 }
-```
+{{</ highlight >}}
 
 Now, any child nodes of the GameManager.tscn can set the state of the game by creating a reference to the GameManager node, and calling the `set_state` func.
 
-```
+{{< highlight gd >}}
 # Snake.gd
 
 ...
@@ -59,7 +59,7 @@ Now, any child nodes of the GameManager.tscn can set the state of the game by cr
 ...
 manager.set_state(GlobalVars.State.PLAY)
 ...
-```
+{{</ highlight >}}
 
 ## Time to eat
 Setting up the apple scene is simple. A `StaticBody2d` for the root node, attatch a `Sprite` node which for now I will lazily drop the snake tail's sprite into as a placehodler, and a `CollisionShape2d`.  For the snake to be able to eat this thing, we'll need a `Area2d` with a `CollisionShape2d` as its child node, which I have named `PickUpBoundary`.
@@ -68,7 +68,7 @@ My inital plan was to use the `Area2d`'s `body_entered` signal to trigger the fu
 
 So for a backup plan, I gave the `snake.tscn` an `Area2d` node called `PickUpArea`, and I instead connected the `area_entered` signal. 
 
-```
+{{< highlight gd >}}
 # Apple.gd
 
 extends Node2D
@@ -85,11 +85,11 @@ func _area_pickup(area):
 		area.get_parent().grow()
 		emit_signal("spawn")
 
-```
+{{</ highlight >}}
 
 The callback function simply checks if the parent of the `Area2d` that entered the `PickUpBoundary` has a `grow` method, and calls it if it does.  Which looks like this
 
-```
+{{< highlight gd >}}
 # Snake.gd
 
 ...
@@ -99,11 +99,11 @@ func grow():
 	grid_coords.append(new_seg)
 
 ...
-```
+{{</ highlight >}}
 
 The reason I am able to simply set the  `Vector2` position for the new segment, rather than doing some vector math to calculate the next position, is thanks to my logic for moving the snake in my `_timer_timeout` func in the `GameManager.gd`.
 
-```
+{{< highlight gd >}}
 #GameManager.gd
 
 ...
@@ -121,7 +121,7 @@ func _timer_timeout():
 			segment_next = segment_previous
 	if current_state == GlobalVars.State.PLAY : 
 		timer.start()
-```
+{{</ highlight >}}
 
 Because I'm just scooting the `Vector2`'s by keeping the previous segment in memory, it just kinda works. It might _feel_ a little lazy to have the last 2 `Vector2`'s in the array be the same value for a moment, but in reality this means that when that last line `segment_next = segment_previous` is executed for the new snake tail segment, it's making the previous snake's last tail segment the new one, which is exactly what we want. It ends up having effect of "growing forward" as the snake moves, since the end of the tail does not move for one of the timer timeouts.
 
@@ -132,7 +132,7 @@ As you can see in the gif above, we get a new apple when we eat one! I created a
 
 In the `GameManager.gd`, I set up a `_new_apple()` func that will spawn the new instance in a random location in the playarea.
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 ...
@@ -149,23 +149,23 @@ func _new_apple():
 	apple.position = grid.map_to_local(new_apple_pos)
 	
 ...
-```
+{{</ highlight >}}
 
 Here, we check to see if there is an Apple node in the scene tree. If there isn't we create an instance of one, and connect the `spawn` signal, the same signal that it emits on pickup. This is to make sure there is only one `Apple.tscn` instance, but this could change in the future.jh}
 
 Oh, and thanks to the newest Godot 4 beta, which is Beta 4, I get to use a new built in array method, `pick_random`! 
 
 Previously to get a random array element you would have to do something like this 
-```
+{{< highlight gd>}}
 new_apple_pos = temp_coords[randi() % temp_coords.size()]
-```
+{{</ highlight >}}
 
 Not the most riveting new feature to test but hey I'm down. After that I have a while loop that will garuntee that the random value for the new Apple position is not occupied by the snake body.
 
 ## Other improvements
 I moved the code that is used to update the snake when there are new segments available at the moment of a timer timeout to an `update_snake()` function. This way it can be used by the `ready()`, `_timer_timeout()`, and whatever other function may need it.
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 ...
@@ -175,11 +175,11 @@ func update_snake(grid_coords_pos = snake.grid_coords.size() - 1):
 	current_segment.position = grid.map_to_local(snake.grid_coords[grid_coords_pos])
 	snake.body_segments.append(current_segment)
 ...
-```
+{{</ highlight >}}
 
 I also had to define a default value for the `grid_coords_pos` argument, since the `_timer_timeout()` func specifically needs the last segment of the snake to be updated, but the `ready()` func actually needs to call this for every snake body segment after the head, so the `ready()` func now looks like this 
 
-```
+{{< highlight gd >}}
 # GameManager.gd
 
 ...
@@ -196,6 +196,6 @@ func _ready():
 			update_snake(s)
 	_new_apple()
 ...
-```
+{{</ highlight >}}
 
 Next update will most likely be triggering the death state, and some bug fixes
