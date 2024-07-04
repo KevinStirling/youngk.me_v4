@@ -6,43 +6,42 @@ Diagonal movement bug Had to change the movement vector code to fix a bug that w
 
 
 
-
-<pre tabindex="0"><code># Snake.gd
-
-...
-func _process(_delta):
-	if Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;) != Vector2.ZERO:
-		if manager.current_state == GlobalVars.State.PAUSE :
-			manager.set_state(GlobalVars.State.PLAY)
-	if Input.is_action_just_pressed(&#34;left&#34;):
-		input_buffer = Vector2(-1, 0)
-	elif Input.is_action_just_pressed(&#34;right&#34;):
-		input_buffer = Vector2(1, 0)
-	elif Input.is_action_just_pressed(&#34;up&#34;):
-		input_buffer = Vector2(0, -1)
-	elif Input.is_action_just_pressed(&#34;down&#34;):
-		input_buffer = Vector2(0, 1)
-...</code></pre><p>So I unfortunately had to break up my nice neatly coded movement code into a sequence of if statements, while still keeping the <code>get_vector</code> for detecting an input to start the game. I&rsquo;m sure theres a hip way to consolidate this but for now this&rsquo;ll do.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Snake.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_process</span><span class="p">(</span><span class="n">_delta</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="k">if</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">get_vector</span><span class="p">(</span><span class="s2">&#34;left&#34;</span><span class="p">,</span> <span class="s2">&#34;right&#34;</span><span class="p">,</span> <span class="s2">&#34;up&#34;</span><span class="p">,</span> <span class="s2">&#34;down&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="nc">Vector2</span><span class="o">.</span><span class="n">ZERO</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">		<span class="k">if</span> <span class="n">manager</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PAUSE</span> <span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">			<span class="n">manager</span><span class="o">.</span><span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAY</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">if</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;left&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">	<span class="k">elif</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;right&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">elif</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;up&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">	<span class="k">elif</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;down&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>So I unfortunately had to break up my nice neatly coded movement code into a sequence of if statements, while still keeping the <code>get_vector</code> for detecting an input to start the game. I&rsquo;m sure theres a hip way to consolidate this but for now this&rsquo;ll do.</p>
 <h2 id="dead-snake">Dead snake</h2>
 <p>To detect if the snake&rsquo;s head has made contact with the snake&rsquo;s tail, I just added a <code>CollisionArea2d</code> to the <code>SnakeTail.tscn</code>, and add the following code to connect the <code>body_entered</code> signal.</p>
 
 
 
 
-
-<pre tabindex="0"><code># SnakeTail.gd
-
-extends StaticBody2D
-
-@onready var col_area = $CollisionArea
-@onready var manager = get_parent()
-
-func _ready():
-	col_area.body_entered.connect(_on_area_2d_body_entered)
-
-func _on_area_2d_body_entered(body):
-	if body.is_in_group(&#34;SnakeHead&#34;):
-		manager.set_state(GlobalVars.State.DEAD)</code></pre><p>I added the SnakeHead node to a group &ldquo;SnakeHead&rdquo; as a lazy check, I&rsquo;ll admit. This may change later if I find it stupid but it works well enough for now.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># SnakeTail.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="kd">extends</span> <span class="nc">StaticBody2D</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">col_area</span> <span class="o">=</span> <span class="nx">$CollisionArea</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">manager</span> <span class="o">=</span> <span class="nf">get_parent</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="n">col_area</span><span class="o">.</span><span class="n">body_entered</span><span class="o">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_on_area_2d_body_entered</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="kd">func</span> <span class="nf">_on_area_2d_body_entered</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">	<span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="nf">is_in_group</span><span class="p">(</span><span class="s2">&#34;SnakeHead&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">		<span class="n">manager</span><span class="o">.</span><span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">DEAD</span><span class="p">)</span></span></span></code></pre></div>
+<p>I added the SnakeHead node to a group &ldquo;SnakeHead&rdquo; as a lazy check, I&rsquo;ll admit. This may change later if I find it stupid but it works well enough for now.</p>
 <h3 id="play-area-changes">Play area changes</h3>
 <p>As you can see from the header image, its pretty minimal. I added a new <code>TileMap</code> layer for the &ldquo;frame&rdquo;, so the playarea does not end up being massive and take forever to traverse, and I can also decorate it later if I want / when I choose a final visual style. Overall a simple but pleasing enhancement from the janky floating window with dimensions that were slightly off from the <code>TileMap</code> :D</p>
 <h3 id="detecting-wall-collision">Detecting wall collision</h3>
@@ -52,38 +51,38 @@ func _on_area_2d_body_entered(body):
 
 
 
-
-<pre tabindex="0"><code># GameManager.gd
-
-...
-func _ready():
-	bg_layer_coords = grid.get_used_cells(1)
-	min_nav_x_y = bg_layer_coords[0]
-	max_nav_x_y = bg_layer_coords[bg_layer_coords.size() - 1]
-	
-...
-
-func is_in_boundaries(grid_coord):
-	if (min_nav_x_y.x &lt; grid_coord.x) and (max_nav_x_y.x &gt; grid_coord.x):
-		if (min_nav_x_y.y &lt; grid_coord.y) and (max_nav_x_y.y &gt; grid_coord.y):
-			return true
-	return false
-...</code></pre><p>This function gets called in the <code>_timer_timeout()</code> func.</p>
-
-
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="n">bg_layer_coords</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">get_used_cells</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="n">min_nav_x_y</span> <span class="o">=</span> <span class="n">bg_layer_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">	<span class="n">max_nav_x_y</span> <span class="o">=</span> <span class="n">bg_layer_coords</span><span class="p">[</span><span class="n">bg_layer_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="kd">func</span> <span class="nf">is_in_boundaries</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">min_nav_x_y</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_nav_x_y</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">min_nav_x_y</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_nav_x_y</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	<span class="k">return</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>This function gets called in the <code>_timer_timeout()</code> func.</p>
 
 
 
-<pre tabindex="0"><code># GameManager.gd
 
-...
-func _timer_timeout():
-...
-	if snake.grid_coords.size() &gt; snake.body_segments.size() :
-		update_snake()
-	for s in range(snake.grid_coords.size()):
-		if s == 0:
-			if !is_in_boundaries(snake.grid_coords[s]):
-				set_state(GlobalVars.State.DEAD)
-...</code></pre><p><em>So close I can almost smell the polishing phase.</em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_timer_timeout</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="k">if</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">		<span class="nf">update_snake</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">			<span class="k">if</span> <span class="o">!</span><span class="nf">is_in_boundaries</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">				<span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">DEAD</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p><em>So close I can almost smell the polishing phase.</em></p>
 ]]></content:encoded></item></channel></rss>

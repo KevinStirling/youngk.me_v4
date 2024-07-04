@@ -66,43 +66,42 @@ Diagonal movement bug Had to change the movement vector code to fix a bug that w
 
 
 
-
-<pre tabindex="0"><code># Snake.gd
-
-...
-func _process(_delta):
-	if Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;) != Vector2.ZERO:
-		if manager.current_state == GlobalVars.State.PAUSE :
-			manager.set_state(GlobalVars.State.PLAY)
-	if Input.is_action_just_pressed(&#34;left&#34;):
-		input_buffer = Vector2(-1, 0)
-	elif Input.is_action_just_pressed(&#34;right&#34;):
-		input_buffer = Vector2(1, 0)
-	elif Input.is_action_just_pressed(&#34;up&#34;):
-		input_buffer = Vector2(0, -1)
-	elif Input.is_action_just_pressed(&#34;down&#34;):
-		input_buffer = Vector2(0, 1)
-...</code></pre><p>So I unfortunately had to break up my nice neatly coded movement code into a sequence of if statements, while still keeping the <code>get_vector</code> for detecting an input to start the game. I&rsquo;m sure theres a hip way to consolidate this but for now this&rsquo;ll do.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Snake.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_process</span><span class="p">(</span><span class="n">_delta</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="k">if</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">get_vector</span><span class="p">(</span><span class="s2">&#34;left&#34;</span><span class="p">,</span> <span class="s2">&#34;right&#34;</span><span class="p">,</span> <span class="s2">&#34;up&#34;</span><span class="p">,</span> <span class="s2">&#34;down&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="nc">Vector2</span><span class="o">.</span><span class="n">ZERO</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">		<span class="k">if</span> <span class="n">manager</span><span class="o">.</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PAUSE</span> <span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">			<span class="n">manager</span><span class="o">.</span><span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAY</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">if</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;left&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">	<span class="k">elif</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;right&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">elif</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;up&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">	<span class="k">elif</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">is_action_just_pressed</span><span class="p">(</span><span class="s2">&#34;down&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>So I unfortunately had to break up my nice neatly coded movement code into a sequence of if statements, while still keeping the <code>get_vector</code> for detecting an input to start the game. I&rsquo;m sure theres a hip way to consolidate this but for now this&rsquo;ll do.</p>
 <h2 id="dead-snake">Dead snake</h2>
 <p>To detect if the snake&rsquo;s head has made contact with the snake&rsquo;s tail, I just added a <code>CollisionArea2d</code> to the <code>SnakeTail.tscn</code>, and add the following code to connect the <code>body_entered</code> signal.</p>
 
 
 
 
-
-<pre tabindex="0"><code># SnakeTail.gd
-
-extends StaticBody2D
-
-@onready var col_area = $CollisionArea
-@onready var manager = get_parent()
-
-func _ready():
-	col_area.body_entered.connect(_on_area_2d_body_entered)
-
-func _on_area_2d_body_entered(body):
-	if body.is_in_group(&#34;SnakeHead&#34;):
-		manager.set_state(GlobalVars.State.DEAD)</code></pre><p>I added the SnakeHead node to a group &ldquo;SnakeHead&rdquo; as a lazy check, I&rsquo;ll admit. This may change later if I find it stupid but it works well enough for now.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># SnakeTail.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="kd">extends</span> <span class="nc">StaticBody2D</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">col_area</span> <span class="o">=</span> <span class="nx">$CollisionArea</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">manager</span> <span class="o">=</span> <span class="nf">get_parent</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="n">col_area</span><span class="o">.</span><span class="n">body_entered</span><span class="o">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_on_area_2d_body_entered</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="kd">func</span> <span class="nf">_on_area_2d_body_entered</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">	<span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="nf">is_in_group</span><span class="p">(</span><span class="s2">&#34;SnakeHead&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">		<span class="n">manager</span><span class="o">.</span><span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">DEAD</span><span class="p">)</span></span></span></code></pre></div>
+<p>I added the SnakeHead node to a group &ldquo;SnakeHead&rdquo; as a lazy check, I&rsquo;ll admit. This may change later if I find it stupid but it works well enough for now.</p>
 <h3 id="play-area-changes">Play area changes</h3>
 <p>As you can see from the header image, its pretty minimal. I added a new <code>TileMap</code> layer for the &ldquo;frame&rdquo;, so the playarea does not end up being massive and take forever to traverse, and I can also decorate it later if I want / when I choose a final visual style. Overall a simple but pleasing enhancement from the janky floating window with dimensions that were slightly off from the <code>TileMap</code> :D</p>
 <h3 id="detecting-wall-collision">Detecting wall collision</h3>
@@ -112,40 +111,40 @@ func _on_area_2d_body_entered(body):
 
 
 
-
-<pre tabindex="0"><code># GameManager.gd
-
-...
-func _ready():
-	bg_layer_coords = grid.get_used_cells(1)
-	min_nav_x_y = bg_layer_coords[0]
-	max_nav_x_y = bg_layer_coords[bg_layer_coords.size() - 1]
-	
-...
-
-func is_in_boundaries(grid_coord):
-	if (min_nav_x_y.x &lt; grid_coord.x) and (max_nav_x_y.x &gt; grid_coord.x):
-		if (min_nav_x_y.y &lt; grid_coord.y) and (max_nav_x_y.y &gt; grid_coord.y):
-			return true
-	return false
-...</code></pre><p>This function gets called in the <code>_timer_timeout()</code> func.</p>
-
-
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="n">bg_layer_coords</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">get_used_cells</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="n">min_nav_x_y</span> <span class="o">=</span> <span class="n">bg_layer_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">	<span class="n">max_nav_x_y</span> <span class="o">=</span> <span class="n">bg_layer_coords</span><span class="p">[</span><span class="n">bg_layer_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="kd">func</span> <span class="nf">is_in_boundaries</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">min_nav_x_y</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_nav_x_y</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">min_nav_x_y</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_nav_x_y</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">grid_coord</span><span class="o">.</span><span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	<span class="k">return</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>This function gets called in the <code>_timer_timeout()</code> func.</p>
 
 
 
-<pre tabindex="0"><code># GameManager.gd
 
-...
-func _timer_timeout():
-...
-	if snake.grid_coords.size() &gt; snake.body_segments.size() :
-		update_snake()
-	for s in range(snake.grid_coords.size()):
-		if s == 0:
-			if !is_in_boundaries(snake.grid_coords[s]):
-				set_state(GlobalVars.State.DEAD)
-...</code></pre><p><em>So close I can almost smell the polishing phase.</em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_timer_timeout</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="k">if</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">		<span class="nf">update_snake</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">			<span class="k">if</span> <span class="o">!</span><span class="nf">is_in_boundaries</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">				<span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">DEAD</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p><em>So close I can almost smell the polishing phase.</em></p>
 ]]></content:encoded></item><item><title>Giving snake an apple</title><link>https://youngk.me/blog/micro-snake-2/</link><pubDate>Sat, 05 Nov 2022 10:57:44 -0400</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/blog/micro-snake-2/</guid><description>Before tackling any new features, I wanted to make sure I atleast had a super bare minimum state management system in place. And a new beta for Godot 4 is out and I get to use a new (very minor) enhancement :D
 Managing state This is pretty much as simple as you can get, which I think fits for the tiny scope of this project. For now this is what that looks like</description><content:encoded><![CDATA[<p>Before tackling any new features, I wanted to make sure I atleast had a super bare minimum state management system in place. And a new beta for Godot 4 is out and I get to use a new (very minor) enhancement :D</p>
 <h2 id="managing-state">Managing state</h2>
@@ -154,52 +153,52 @@ Managing state This is pretty much as simple as you can get, which I think fits 
 
 
 
-
-<pre tabindex="0"><code># GameManager.gd
-
-...
-var current_state := GlobalVars.State.PAUSE
-
-func set_state(new_state: GlobalVars.State):
-	current_state = new_state
-	match current_state:
-		GlobalVars.State.PLAY:
-			timer.start()
-			timer.paused = false
-		GlobalVars.State.PAUSE:
-			timer.paused = true
-		GlobalVars.State.DEAD:
-			timer.stop()
-...</code></pre><p>As you can see, it really only needs to manage the timer for now.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">var</span> <span class="n">current_state</span> <span class="o">:=</span> <span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PAUSE</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="kd">func</span> <span class="nf">set_state</span><span class="p">(</span><span class="n">new_state</span><span class="p">:</span> <span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">	<span class="n">current_state</span> <span class="o">=</span> <span class="n">new_state</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">match</span> <span class="n">current_state</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAY</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">			<span class="n">timer</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">			<span class="n">timer</span><span class="o">.</span><span class="n">paused</span> <span class="o">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">		<span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PAUSE</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">			<span class="n">timer</span><span class="o">.</span><span class="n">paused</span> <span class="o">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">		<span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">DEAD</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">			<span class="n">timer</span><span class="o">.</span><span class="nf">stop</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>As you can see, it really only needs to manage the timer for now.</p>
 <p><code>GlobalVars.gd</code> is an autoloaded file that simply has an enum called State.</p>
 
 
 
 
-
-<pre tabindex="0"><code># GlobalVars.gd
-
-extends Node
-
-enum State {
-	PAUSE,
-	PLAY,
-	DEAD
-}</code></pre><p>Now, any child nodes of the GameManager.tscn can set the state of the game by creating a reference to the GameManager node, and calling the <code>set_state</code> func.</p>
-
-
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># GlobalVars.gd</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="kd">extends</span> <span class="nc">Node</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">
+</span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="kd">enum</span> <span class="n">State</span> <span class="p">{</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">	<span class="n">PAUSE</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl">	<span class="n">PLAY</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">	<span class="n">DEAD</span>
+</span></span><span class="line"><span class="ln">9</span><span class="cl"><span class="p">}</span></span></span></code></pre></div>
+<p>Now, any child nodes of the GameManager.tscn can set the state of the game by creating a reference to the GameManager node, and calling the <code>set_state</code> func.</p>
 
 
 
-<pre tabindex="0"><code># Snake.gd
 
-...
-@onready var manager = get_parent()
-...
-
-...
-manager.set_state(GlobalVars.State.PLAY)
-...</code></pre><h2 id="time-to-eat">Time to eat</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># Snake.gd</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">manager</span> <span class="o">=</span> <span class="nf">get_parent</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl"><span class="n">manager</span><span class="o">.</span><span class="nf">set_state</span><span class="p">(</span><span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAY</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">9</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<h2 id="time-to-eat">Time to eat</h2>
 <p>Setting up the apple scene is simple. A <code>StaticBody2d</code> for the root node, attatch a <code>Sprite</code> node which for now I will lazily drop the snake tail&rsquo;s sprite into as a placehodler, and a <code>CollisionShape2d</code>.  For the snake to be able to eat this thing, we&rsquo;ll need a <code>Area2d</code> with a <code>CollisionShape2d</code> as its child node, which I have named <code>PickUpBoundary</code>.</p>
 <p>My inital plan was to use the <code>Area2d</code>&rsquo;s <code>body_entered</code> signal to trigger the function to make the snake grow. However for whatever reason, that signal is not working when the <code>Snake</code> body enters it. Everything is on the same collision layer and mask layer too, so it should be detectable. Might investigate this later and see if its a Godot 4 beta bug.</p>
 <p>So for a backup plan, I gave the <code>snake.tscn</code> an <code>Area2d</code> node called <code>PickUpArea</code>, and I instead connected the <code>area_entered</code> signal.</p>
@@ -207,58 +206,58 @@ manager.set_state(GlobalVars.State.PLAY)
 
 
 
-
-<pre tabindex="0"><code># Apple.gd
-
-extends Node2D
-
-@onready var pickUpArea = $PickUpBoundary
-
-signal spawn
-
-func _ready():
-	pickUpArea.area_entered.connect(_area_pickup)
-
-func _area_pickup(area):
-	if area.get_parent().has_method(&#34;grow&#34;):
-		area.get_parent().grow()
-		emit_signal(&#34;spawn&#34;)</code></pre><p>The callback function simply checks if the parent of the <code>Area2d</code> that entered the <code>PickUpBoundary</code> has a <code>grow</code> method, and calls it if it does.  Which looks like this</p>
-
-
-
-
-
-<pre tabindex="0"><code># Snake.gd
-
-...
-
-func grow():
-	var new_seg = grid_coords[grid_coords.size() - 1]
-	grid_coords.append(new_seg)
-
-...</code></pre><p>The reason I am able to simply set the  <code>Vector2</code> position for the new segment, rather than doing some vector math to calculate the next position, is thanks to my logic for moving the snake in my <code>_timer_timeout</code> func in the <code>GameManager.gd</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Apple.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="kd">extends</span> <span class="nc">Node2D</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">pickUpArea</span> <span class="o">=</span> <span class="nx">$PickUpBoundary</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="kd">signal</span> <span class="n">spawn</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">	<span class="n">pickUpArea</span><span class="o">.</span><span class="n">area_entered</span><span class="o">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_area_pickup</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="kd">func</span> <span class="nf">_area_pickup</span><span class="p">(</span><span class="n">area</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">	<span class="k">if</span> <span class="n">area</span><span class="o">.</span><span class="nf">get_parent</span><span class="p">()</span><span class="o">.</span><span class="nf">has_method</span><span class="p">(</span><span class="s2">&#34;grow&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">		<span class="n">area</span><span class="o">.</span><span class="nf">get_parent</span><span class="p">()</span><span class="o">.</span><span class="nf">grow</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">		<span class="nf">emit_signal</span><span class="p">(</span><span class="s2">&#34;spawn&#34;</span><span class="p">)</span></span></span></code></pre></div>
+<p>The callback function simply checks if the parent of the <code>Area2d</code> that entered the <code>PickUpBoundary</code> has a <code>grow</code> method, and calls it if it does.  Which looks like this</p>
 
 
 
 
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># Snake.gd</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">
+</span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="kd">func</span> <span class="nf">grow</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">	<span class="kd">var</span> <span class="n">new_seg</span> <span class="o">=</span> <span class="n">grid_coords</span><span class="p">[</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl">	<span class="n">grid_coords</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">new_seg</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">
+</span></span><span class="line"><span class="ln">9</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>The reason I am able to simply set the  <code>Vector2</code> position for the new segment, rather than doing some vector math to calculate the next position, is thanks to my logic for moving the snake in my <code>_timer_timeout</code> func in the <code>GameManager.gd</code>.</p>
 
-<pre tabindex="0"><code>#GameManager.gd
 
-...
-func _timer_timeout():
-	var segment_next
-	var segment_previous
-...
-	for s in range(snake.grid_coords.size()):
-...
-		else:
-			grid.erase_cell(1, snake.grid_coords[s])
-			segment_previous = snake.grid_coords[s]
-			snake.grid_coords[s] = segment_next
-			snake.body_segments[s].position = grid.map_to_local(snake.grid_coords[s])
-			segment_next = segment_previous
-	if current_state == GlobalVars.State.PLAY : 
-		timer.start()</code></pre><p>Because I&rsquo;m just scooting the <code>Vector2</code>&rsquo;s by keeping the previous segment in memory, it just kinda works. It might <em>feel</em> a little lazy to have the last 2 <code>Vector2</code>&rsquo;s in the array be the same value for a moment, but in reality this means that when that last line <code>segment_next = segment_previous</code> is executed for the new snake tail segment, it&rsquo;s making the previous snake&rsquo;s last tail segment the new one, which is exactly what we want. It ends up having effect of &ldquo;growing forward&rdquo; as the snake moves, since the end of the tail does not move for one of the timer timeouts.</p>
+
+
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1">#GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_timer_timeout</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="kd">var</span> <span class="n">segment_next</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="kd">var</span> <span class="n">segment_previous</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">		<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">			<span class="n">grid</span><span class="o">.</span><span class="nf">erase_cell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">			<span class="n">segment_previous</span> <span class="o">=</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment_next</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">			<span class="n">segment_next</span> <span class="o">=</span> <span class="n">segment_previous</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">	<span class="k">if</span> <span class="n">current_state</span> <span class="o">==</span> <span class="n">GlobalVars</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAY</span> <span class="p">:</span> 
+</span></span><span class="line"><span class="ln">17</span><span class="cl">		<span class="n">timer</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span></span></span></code></pre></div>
+<p>Because I&rsquo;m just scooting the <code>Vector2</code>&rsquo;s by keeping the previous segment in memory, it just kinda works. It might <em>feel</em> a little lazy to have the last 2 <code>Vector2</code>&rsquo;s in the array be the same value for a moment, but in reality this means that when that last line <code>segment_next = segment_previous</code> is executed for the new snake tail segment, it&rsquo;s making the previous snake&rsquo;s last tail segment the new one, which is exactly what we want. It ends up having effect of &ldquo;growing forward&rdquo; as the snake moves, since the end of the tail does not move for one of the timer timeouts.</p>
 <p><img alt="snek_apple" src="/images/posts/snek_apple.gif" title="snek"></p>
 <h2 id="more-apple">More apple</h2>
 <p>As you can see in the gif above, we get a new apple when we eat one! I created a <code>spawn</code> signal in <code>Apple.gd</code> that is emitted when the apple&rsquo;s <code>area_entered</code> callback is triggered by the snake eating the apple.</p>
@@ -267,68 +266,68 @@ func _timer_timeout():
 
 
 
-
-<pre tabindex="0"><code># GameManager.gd
-
-...
-
-func _new_apple():
-	if get_node_or_null(&#34;Apple&#34;) == null :
-		apple = apple.instantiate()
-		add_child(apple)
-		apple.spawn.connect(_new_apple)
-	var temp_coords = bg_layer_coords 
-	var new_apple_pos : Vector2 = temp_coords[randi() % temp_coords.size()]
-	while snake.grid_coords.has(new_apple_pos):
-		new_apple_pos = temp_coords.pick_random()
-	apple.position = grid.map_to_local(new_apple_pos)
-	
-...</code></pre><p>Here, we check to see if there is an Apple node in the scene tree. If there isn&rsquo;t we create an instance of one, and connect the <code>spawn</code> signal, the same signal that it emits on pickup. This is to make sure there is only one <code>Apple.tscn</code> instance, but this could change in the future.jh}</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="kd">func</span> <span class="nf">_new_apple</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="k">if</span> <span class="nf">get_node_or_null</span><span class="p">(</span><span class="s2">&#34;Apple&#34;</span><span class="p">)</span> <span class="o">==</span> <span class="kt">null</span> <span class="p">:</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">		<span class="n">apple</span> <span class="o">=</span> <span class="n">apple</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">		<span class="nf">add_child</span><span class="p">(</span><span class="n">apple</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="n">apple</span><span class="o">.</span><span class="n">spawn</span><span class="o">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_new_apple</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">	<span class="kd">var</span> <span class="n">temp_coords</span> <span class="o">=</span> <span class="n">bg_layer_coords</span> 
+</span></span><span class="line"><span class="ln">11</span><span class="cl">	<span class="kd">var</span> <span class="n">new_apple_pos</span> <span class="p">:</span> <span class="nc">Vector2</span> <span class="o">=</span> <span class="n">temp_coords</span><span class="p">[</span><span class="nb">randi</span><span class="p">()</span> <span class="o">%</span> <span class="n">temp_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()]</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">while</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">has</span><span class="p">(</span><span class="n">new_apple_pos</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="n">new_apple_pos</span> <span class="o">=</span> <span class="n">temp_coords</span><span class="o">.</span><span class="nf">pick_random</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">	<span class="n">apple</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">new_apple_pos</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>Here, we check to see if there is an Apple node in the scene tree. If there isn&rsquo;t we create an instance of one, and connect the <code>spawn</code> signal, the same signal that it emits on pickup. This is to make sure there is only one <code>Apple.tscn</code> instance, but this could change in the future.jh}</p>
 <p>Oh, and thanks to the newest Godot 4 beta, which is Beta 4, I get to use a new built in array method, <code>pick_random</code>!</p>
-<p>Previously to get a random array element you would have to do something like this</p>
+<p>Previously to get a random array element you would have to do something like this
 
 
 
 
-
-<pre tabindex="0"><code>new_apple_pos = temp_coords[randi() % temp_coords.size()]</code></pre><p>Not the most riveting new feature to test but hey I&rsquo;m down. After that I have a while loop that will garuntee that the random value for the new Apple position is not occupied by the snake body.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln">1</span><span class="cl"><span class="n">new_apple_pos</span> <span class="o">=</span> <span class="n">temp_coords</span><span class="p">[</span><span class="nb">randi</span><span class="p">()</span> <span class="o">%</span> <span class="n">temp_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()]</span></span></span></code></pre></div></p>
+<p>Not the most riveting new feature to test but hey I&rsquo;m down. After that I have a while loop that will garuntee that the random value for the new Apple position is not occupied by the snake body.</p>
 <h2 id="other-improvements">Other improvements</h2>
 <p>I moved the code that is used to update the snake when there are new segments available at the moment of a timer timeout to an <code>update_snake()</code> function. This way it can be used by the <code>ready()</code>, <code>_timer_timeout()</code>, and whatever other function may need it.</p>
 
 
 
 
-
-<pre tabindex="0"><code># GameManager.gd
-
-...
-func update_snake(grid_coords_pos = snake.grid_coords.size() - 1): 
-	var current_segment = snake_segment.instantiate()
-	add_child(current_segment)
-	current_segment.position = grid.map_to_local(snake.grid_coords[grid_coords_pos])
-	snake.body_segments.append(current_segment)
-...</code></pre><p>I also had to define a default value for the <code>grid_coords_pos</code> argument, since the <code>_timer_timeout()</code> func specifically needs the last segment of the snake to be updated, but the <code>ready()</code> func actually needs to call this for every snake body segment after the head, so the <code>ready()</code> func now looks like this</p>
-
-
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="kd">func</span> <span class="nf">update_snake</span><span class="p">(</span><span class="n">grid_coords_pos</span> <span class="o">=</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span> 
+</span></span><span class="line"><span class="ln">5</span><span class="cl">	<span class="kd">var</span> <span class="n">current_segment</span> <span class="o">=</span> <span class="n">snake_segment</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">	<span class="nf">add_child</span><span class="p">(</span><span class="n">current_segment</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl">	<span class="n">current_segment</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">grid_coords_pos</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">	<span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">current_segment</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">9</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>I also had to define a default value for the <code>grid_coords_pos</code> argument, since the <code>_timer_timeout()</code> func specifically needs the last segment of the snake to be updated, but the <code>ready()</code> func actually needs to call this for every snake body segment after the head, so the <code>ready()</code> func now looks like this</p>
 
 
 
-<pre tabindex="0"><code># GameManager.gd
 
-...
-func _ready():
-	bg_layer_coords = grid.get_used_cells(0)
-	timer.timeout.connect(_timer_timeout)
-	snake = snake_head.instantiate()
-	for s in range(snake.grid_coords.size()):
-		if s == 0:
-			add_child(snake)
-			snake.position = grid.map_to_local(snake.grid_coords[s])
-			snake.body_segments.push_front(snake)
-		else:
-			update_snake(s)
-	_new_apple()
-...</code></pre><p>Next update will most likely be triggering the death state, and some bug fixes</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">	<span class="n">bg_layer_coords</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">get_used_cells</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="n">timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_timer_timeout</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">	<span class="n">snake</span> <span class="o">=</span> <span class="n">snake_head</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">		<span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">			<span class="nf">add_child</span><span class="p">(</span><span class="n">snake</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="o">.</span><span class="nf">push_front</span><span class="p">(</span><span class="n">snake</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">		<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">			<span class="nf">update_snake</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	<span class="nf">_new_apple</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="o">...</span></span></span></code></pre></div>
+<p>Next update will most likely be triggering the death state, and some bug fixes</p>
 ]]></content:encoded></item><item><title>Learning Godot 4 Tilemaps via Snake</title><link>https://youngk.me/blog/godot-4-tilemaps/</link><pubDate>Sun, 30 Oct 2022 17:29:03 -0400</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/blog/godot-4-tilemaps/</guid><description>With Godot 4 now in beta, I&amp;rsquo;ve been starting to mess around with the new kit. And although there&amp;rsquo;s a lot of really exciting 3d features coming to Godot 4, the 2d space is a bit more in my wheelhouse for now, as I continue to learn the engine.
 One new feature I am looking forward to using in Godot 4 2d is the new TileMap node updates. To get myself farmiliar with the new TileMap api, I wanted a project that would let me dip my toes into this node, but I also wanted a project that had a small scope and ideally I wouldn&amp;rsquo;t have to think up rules or functionality from scratch.</description><content:encoded><![CDATA[<p>With Godot 4 now in beta, I&rsquo;ve been starting to mess around with the new kit. And although there&rsquo;s a lot of really exciting 3d features coming to Godot 4, the 2d space is a bit more in my wheelhouse for now, as I continue to learn the engine.</p>
 <p>One new feature I am looking forward to using in Godot 4 2d is the new <code>TileMap</code> node updates. To get myself farmiliar with the new <code>TileMap</code> api, I wanted a project that would let me dip my toes into this node, but I also wanted a project that had a small scope and ideally I wouldn&rsquo;t have to think up rules or functionality from scratch. So, I chose to remake Snake, using a <code>TileMap</code> as my main playarea!</p>
@@ -344,68 +343,68 @@ One new feature I am looking forward to using in Godot 4 2d is the new TileMap n
 
 
 
-
-<pre tabindex="0"><code># Snake.gd
-
-extends StaticBody2D
-
-@onready var manager = get_parent()
-
-var input_buffer := Vector2.ZERO
-
-var grid_coords := [Vector2(21, 22), Vector2(22,22), Vector2(23,22), Vector2(24,22)]
-var body_segments: Array
-
-func _process(_delta):
-	if Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;) != Vector2.ZERO:
-		input_buffer = Input.get_vector(&#34;left&#34;, &#34;right&#34;, &#34;up&#34;, &#34;down&#34;)</code></pre><p>It&rsquo;s a little different from a basic 2d game set up, since I&rsquo;m not moving the player kinematically, hence the <code>StaticBody2d</code> node. I&rsquo;m just storing the vector from <code>Input.get_vector</code>, and using that to influce the direction the snake will move on the timer&rsquo;s timeout duration. The <code>grid_coords</code> is an array that will be storing the position of each snake segment position on the <code>TileMap</code>. Which leads me to the <code>SnakeTail</code> scene&hellip;. which is actually pretty much identical to the <code>Snake</code> scene at the moment, just without a script and a different sprite. For now it is just serving the purpose of being an instanced scene.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Snake.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="kd">extends</span> <span class="nc">StaticBody2D</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">manager</span> <span class="o">=</span> <span class="nf">get_parent</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="kd">var</span> <span class="n">input_buffer</span> <span class="o">:=</span> <span class="nc">Vector2</span><span class="o">.</span><span class="n">ZERO</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="kd">var</span> <span class="n">grid_coords</span> <span class="o">:=</span> <span class="p">[</span><span class="nc">Vector2</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">),</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span><span class="mi">22</span><span class="p">),</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span><span class="mi">22</span><span class="p">),</span> <span class="nc">Vector2</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">22</span><span class="p">)]</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="kd">var</span> <span class="n">body_segments</span><span class="p">:</span> <span class="nc">Array</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="kd">func</span> <span class="nf">_process</span><span class="p">(</span><span class="n">_delta</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">	<span class="k">if</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">get_vector</span><span class="p">(</span><span class="s2">&#34;left&#34;</span><span class="p">,</span> <span class="s2">&#34;right&#34;</span><span class="p">,</span> <span class="s2">&#34;up&#34;</span><span class="p">,</span> <span class="s2">&#34;down&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="nc">Vector2</span><span class="o">.</span><span class="n">ZERO</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">		<span class="n">input_buffer</span> <span class="o">=</span> <span class="nc">Input</span><span class="o">.</span><span class="nf">get_vector</span><span class="p">(</span><span class="s2">&#34;left&#34;</span><span class="p">,</span> <span class="s2">&#34;right&#34;</span><span class="p">,</span> <span class="s2">&#34;up&#34;</span><span class="p">,</span> <span class="s2">&#34;down&#34;</span><span class="p">)</span></span></span></code></pre></div>
+<p>It&rsquo;s a little different from a basic 2d game set up, since I&rsquo;m not moving the player kinematically, hence the <code>StaticBody2d</code> node. I&rsquo;m just storing the vector from <code>Input.get_vector</code>, and using that to influce the direction the snake will move on the timer&rsquo;s timeout duration. The <code>grid_coords</code> is an array that will be storing the position of each snake segment position on the <code>TileMap</code>. Which leads me to the <code>SnakeTail</code> scene&hellip;. which is actually pretty much identical to the <code>Snake</code> scene at the moment, just without a script and a different sprite. For now it is just serving the purpose of being an instanced scene.</p>
 <p>Now to tie it all together in the <code>GameManager.gd</code> script.</p>
 
 
 
 
-
-<pre tabindex="0"><code># GameManager.gd
-
-extends Node2D
-
-@onready var grid = $TileMap;
-@onready var timer = $Timer;
-@onready var snake_head = preload(&#34;res://Snake/Snake.tscn&#34;);
-@onready var snake_segment = preload(&#34;res://Snake/SnakeTail.tscn&#34;);
-
-var snake
-
-func _ready():
-	timer.timeout.connect(_timer_timeout)
-	snake = snake_head.instantiate()
-	for s in range(snake.grid_coords.size()):
-		if s == 0:
-			add_child(snake)
-			snake.position = grid.map_to_local(snake.grid_coords[s])
-			snake.body_segments.push_front(snake)
-		else:
-			var current_segment = snake_segment.instantiate()
-			add_child(current_segment)
-			current_segment.position = grid.map_to_local(snake.grid_coords[s])
-			snake.body_segments.append(current_segment)
-	timer.start()
-
-func _timer_timeout():
-	var segment_next
-	var segment_previous
-	for s in range(snake.grid_coords.size()):
-		if s == 0:
-			segment_next = snake.grid_coords[s]
-			snake.grid_coords[s] = snake.grid_coords[s] + snake.input_buffer
-			snake.position = grid.map_to_local(snake.grid_coords[s])
-		else:
-			grid.erase_cell(1, snake.grid_coords[s])
-			segment_previous = snake.grid_coords[s]
-			snake.grid_coords[s] = segment_next
-			snake.body_segments[s].position = grid.map_to_local(snake.grid_coords[s])
-			segment_next = segment_previous
-		timer.start()</code></pre><p>Basically, in the <code>_ready</code> func we set up the snake by instancing all of the body parts from the <code>Vector2</code>&rsquo;s that are stored in the <code>Snake</code> scene&rsquo;s <code>grid_coords</code> array. To make things easy, the snake&rsquo;s head is always position <code>0</code> of the array, and the rest of the snake tail segments are added in sequential order. For both the snake head and body segments, instances of each scene are created for each of the <code>Vector2</code>&rsquo;s in <code>grid_coords</code>, and pushed to the <code>Snake</code> scene&rsquo;s <code>body_segments</code> array. Since they are in sequential order, we know that <code>grid_coords[2]</code> is the position of the instanced scene stored in <code>body_segments[2]</code>. Ain&rsquo;t that fun.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># GameManager.gd</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="kd">extends</span> <span class="nc">Node2D</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">grid</span> <span class="o">=</span> <span class="nx">$TileMap</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">timer</span> <span class="o">=</span> <span class="nx">$Timer</span><span class="p">;</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">snake_head</span> <span class="o">=</span> <span class="nb">preload</span><span class="p">(</span><span class="s2">&#34;res://Snake/Snake.tscn&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="nd">@onready</span> <span class="kd">var</span> <span class="n">snake_segment</span> <span class="o">=</span> <span class="nb">preload</span><span class="p">(</span><span class="s2">&#34;res://Snake/SnakeTail.tscn&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="kd">var</span> <span class="n">snake</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="kd">func</span> <span class="nf">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">	<span class="n">timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_timer_timeout</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">	<span class="n">snake</span> <span class="o">=</span> <span class="n">snake_head</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()):</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">		<span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">			<span class="nf">add_child</span><span class="p">(</span><span class="n">snake</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="o">.</span><span class="nf">push_front</span><span class="p">(</span><span class="n">snake</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">		<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">			<span class="kd">var</span> <span class="n">current_segment</span> <span class="o">=</span> <span class="n">snake_segment</span><span class="o">.</span><span class="nf">instantiate</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">			<span class="nf">add_child</span><span class="p">(</span><span class="n">current_segment</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">			<span class="n">current_segment</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">current_segment</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">25</span><span class="cl">	<span class="n">timer</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">26</span><span class="cl">
+</span></span><span class="line"><span class="ln">27</span><span class="cl"><span class="kd">func</span> <span class="nf">_timer_timeout</span><span class="p">():</span>
+</span></span><span class="line"><span class="ln">28</span><span class="cl">	<span class="kd">var</span> <span class="n">segment_next</span>
+</span></span><span class="line"><span class="ln">29</span><span class="cl">	<span class="kd">var</span> <span class="n">segment_previous</span>
+</span></span><span class="line"><span class="ln">30</span><span class="cl">	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="o">.</span><span class="nf">size</span><span class="p">()):</span>
+</span></span><span class="line"><span class="ln">31</span><span class="cl">		<span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">32</span><span class="cl">			<span class="n">segment_next</span> <span class="o">=</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">33</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">+</span> <span class="n">snake</span><span class="o">.</span><span class="n">input_buffer</span>
+</span></span><span class="line"><span class="ln">34</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">35</span><span class="cl">		<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">36</span><span class="cl">			<span class="n">grid</span><span class="o">.</span><span class="nf">erase_cell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">37</span><span class="cl">			<span class="n">segment_previous</span> <span class="o">=</span> <span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">38</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment_next</span>
+</span></span><span class="line"><span class="ln">39</span><span class="cl">			<span class="n">snake</span><span class="o">.</span><span class="n">body_segments</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="nf">map_to_local</span><span class="p">(</span><span class="n">snake</span><span class="o">.</span><span class="n">grid_coords</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+</span></span><span class="line"><span class="ln">40</span><span class="cl">			<span class="n">segment_next</span> <span class="o">=</span> <span class="n">segment_previous</span>
+</span></span><span class="line"><span class="ln">41</span><span class="cl">		<span class="n">timer</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span></span></span></code></pre></div>
+<p>Basically, in the <code>_ready</code> func we set up the snake by instancing all of the body parts from the <code>Vector2</code>&rsquo;s that are stored in the <code>Snake</code> scene&rsquo;s <code>grid_coords</code> array. To make things easy, the snake&rsquo;s head is always position <code>0</code> of the array, and the rest of the snake tail segments are added in sequential order. For both the snake head and body segments, instances of each scene are created for each of the <code>Vector2</code>&rsquo;s in <code>grid_coords</code>, and pushed to the <code>Snake</code> scene&rsquo;s <code>body_segments</code> array. Since they are in sequential order, we know that <code>grid_coords[2]</code> is the position of the instanced scene stored in <code>body_segments[2]</code>. Ain&rsquo;t that fun.</p>
 <p>Here you can see some of the <code>TileMap</code> api coming into play, utilizing the <code>map_to_local(Vector2i)</code> func, which takes a <code>Vector2</code> and returns the cenetered position of the cell in the <code>TileMap</code>&rsquo;s local coordinate space. We do this to prvent the snake&rsquo;s sprites being off center on the grid, which would make things confusing when we start moving things around and adding pick up items to the <code>TileMap</code>.</p>
 <p>Then, to actually move this bad boy, we connect the timer&rsquo;s timeout signal. When the <code>Timer</code> times out, the signal will call the <code>_timer_timeout()</code> func, and start to shift the position of the snake&rsquo;s head stored in <code>grid_coord</code> by adding the <code>input_vector</code> to it&rsquo;s current position <code>Vector2</code>. Then we just use the previous position of the snake&rsquo;s head as the position of the next object in <code>grid_coords</code>, and do the same for each body segment.</p>
 <p><img alt="snek_move" src="/images/posts/snek.gif" title="snek"></p>

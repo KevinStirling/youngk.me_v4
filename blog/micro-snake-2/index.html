@@ -1,114 +1,114 @@
 <!doctype html><html lang=en-US><head><meta http-equiv=X-Clacks-Overhead content="GNU Terry Pratchett"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=https://youngk.me/images/favicon.png><title>Giving snake an apple | Kevin Young</title>
-<meta name=title content="Giving snake an apple"><meta name=description content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta name=keywords content="godot4,"><meta property="og:title" content="Giving snake an apple"><meta property="og:description" content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta property="og:type" content="article"><meta property="og:url" content="https://youngk.me/blog/micro-snake-2/"><meta property="og:image" content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_78dc9a65accd31359ef2ec2df911f2f6.webp"><meta property="article:section" content="blog"><meta property="article:published_time" content="2022-11-05T10:57:44-04:00"><meta property="article:modified_time" content="2022-11-05T10:57:44-04:00"><meta property="og:site_name" content="Kevin Young"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_78dc9a65accd31359ef2ec2df911f2f6.webp"><meta name=twitter:title content="Giving snake an apple"><meta name=twitter:description content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta itemprop=name content="Giving snake an apple"><meta itemprop=description content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta itemprop=datePublished content="2022-11-05T10:57:44-04:00"><meta itemprop=dateModified content="2022-11-05T10:57:44-04:00"><meta itemprop=wordCount content="955"><meta itemprop=image content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_78dc9a65accd31359ef2ec2df911f2f6.webp"><meta itemprop=keywords content="godot4,"><meta name=referrer content="no-referrer-when-downgrade"><link href=/original.min.css rel=stylesheet><link href=/syntax.min.css rel=stylesheet></head><body><header><a class=skip-link href=#main-content>Skip to main content</a>
+<meta name=title content="Giving snake an apple"><meta name=description content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta name=keywords content="godot4,"><meta property="og:title" content="Giving snake an apple"><meta property="og:description" content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta property="og:type" content="article"><meta property="og:url" content="https://youngk.me/blog/micro-snake-2/"><meta property="og:image" content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_78dc9a65accd31359ef2ec2df911f2f6.webp"><meta property="article:section" content="blog"><meta property="article:published_time" content="2022-11-05T10:57:44-04:00"><meta property="article:modified_time" content="2022-11-05T10:57:44-04:00"><meta property="og:site_name" content="Kevin Young"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_78dc9a65accd31359ef2ec2df911f2f6.webp"><meta name=twitter:title content="Giving snake an apple"><meta name=twitter:description content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta itemprop=name content="Giving snake an apple"><meta itemprop=description content="Feeding the snake for growth, some stupid simple state management, and some code simplification"><meta itemprop=datePublished content="2022-11-05T10:57:44-04:00"><meta itemprop=dateModified content="2022-11-05T10:57:44-04:00"><meta itemprop=wordCount content="1038"><meta itemprop=image content="https://youngk.me/images/social_card_bg_hu24b6b25ef60ca259d3d1b88ebbfdfb28_6698_78dc9a65accd31359ef2ec2df911f2f6.webp"><meta itemprop=keywords content="godot4,"><meta name=referrer content="no-referrer-when-downgrade"><link href=/original.min.css rel=stylesheet><link href=/syntax.min.css rel=stylesheet></head><body><header><a class=skip-link href=#main-content>Skip to main content</a>
 <img src=../../images/avatar.png width=100>
 <a href=/ class=title><h1>Kevin Young</h1></a><nav><a href=/>Home</a>
 <a href=/projects/>Projects</a>
 <a href=/blog/>Blog</a>
-<a href=https://youngk.me/index.xml>RSS</a></nav></header><main id=main-content><h1>Giving snake an apple</h1><p class=byline><time datetime=2022-11-05 pubdate>2022-11-05</time></p><content><p>Before tackling any new features, I wanted to make sure I atleast had a super bare minimum state management system in place. And a new beta for Godot 4 is out and I get to use a new (very minor) enhancement :D</p><h2 id=managing-state>Managing state</h2><p>This is pretty much as simple as you can get, which I think fits for the tiny scope of this project. For now this is what that looks like</p><pre tabindex=0><code># GameManager.gd
-
-...
-var current_state := GlobalVars.State.PAUSE
-
-func set_state(new_state: GlobalVars.State):
-	current_state = new_state
-	match current_state:
-		GlobalVars.State.PLAY:
-			timer.start()
-			timer.paused = false
-		GlobalVars.State.PAUSE:
-			timer.paused = true
-		GlobalVars.State.DEAD:
-			timer.stop()
-...</code></pre><p>As you can see, it really only needs to manage the timer for now.</p><p><code>GlobalVars.gd</code> is an autoloaded file that simply has an enum called State.</p><pre tabindex=0><code># GlobalVars.gd
-
-extends Node
-
-enum State {
-	PAUSE,
-	PLAY,
-	DEAD
-}</code></pre><p>Now, any child nodes of the GameManager.tscn can set the state of the game by creating a reference to the GameManager node, and calling the <code>set_state</code> func.</p><pre tabindex=0><code># Snake.gd
-
-...
-@onready var manager = get_parent()
-...
-
-...
-manager.set_state(GlobalVars.State.PLAY)
-...</code></pre><h2 id=time-to-eat>Time to eat</h2><p>Setting up the apple scene is simple. A <code>StaticBody2d</code> for the root node, attatch a <code>Sprite</code> node which for now I will lazily drop the snake tail&rsquo;s sprite into as a placehodler, and a <code>CollisionShape2d</code>. For the snake to be able to eat this thing, we&rsquo;ll need a <code>Area2d</code> with a <code>CollisionShape2d</code> as its child node, which I have named <code>PickUpBoundary</code>.</p><p>My inital plan was to use the <code>Area2d</code>&rsquo;s <code>body_entered</code> signal to trigger the function to make the snake grow. However for whatever reason, that signal is not working when the <code>Snake</code> body enters it. Everything is on the same collision layer and mask layer too, so it should be detectable. Might investigate this later and see if its a Godot 4 beta bug.</p><p>So for a backup plan, I gave the <code>snake.tscn</code> an <code>Area2d</code> node called <code>PickUpArea</code>, and I instead connected the <code>area_entered</code> signal.</p><pre tabindex=0><code># Apple.gd
-
-extends Node2D
-
-@onready var pickUpArea = $PickUpBoundary
-
-signal spawn
-
-func _ready():
-	pickUpArea.area_entered.connect(_area_pickup)
-
-func _area_pickup(area):
-	if area.get_parent().has_method(&#34;grow&#34;):
-		area.get_parent().grow()
-		emit_signal(&#34;spawn&#34;)</code></pre><p>The callback function simply checks if the parent of the <code>Area2d</code> that entered the <code>PickUpBoundary</code> has a <code>grow</code> method, and calls it if it does. Which looks like this</p><pre tabindex=0><code># Snake.gd
-
-...
-
-func grow():
-	var new_seg = grid_coords[grid_coords.size() - 1]
-	grid_coords.append(new_seg)
-
-...</code></pre><p>The reason I am able to simply set the <code>Vector2</code> position for the new segment, rather than doing some vector math to calculate the next position, is thanks to my logic for moving the snake in my <code>_timer_timeout</code> func in the <code>GameManager.gd</code>.</p><pre tabindex=0><code>#GameManager.gd
-
-...
-func _timer_timeout():
-	var segment_next
-	var segment_previous
-...
-	for s in range(snake.grid_coords.size()):
-...
-		else:
-			grid.erase_cell(1, snake.grid_coords[s])
-			segment_previous = snake.grid_coords[s]
-			snake.grid_coords[s] = segment_next
-			snake.body_segments[s].position = grid.map_to_local(snake.grid_coords[s])
-			segment_next = segment_previous
-	if current_state == GlobalVars.State.PLAY : 
-		timer.start()</code></pre><p>Because I&rsquo;m just scooting the <code>Vector2</code>&rsquo;s by keeping the previous segment in memory, it just kinda works. It might <em>feel</em> a little lazy to have the last 2 <code>Vector2</code>&rsquo;s in the array be the same value for a moment, but in reality this means that when that last line <code>segment_next = segment_previous</code> is executed for the new snake tail segment, it&rsquo;s making the previous snake&rsquo;s last tail segment the new one, which is exactly what we want. It ends up having effect of &ldquo;growing forward&rdquo; as the snake moves, since the end of the tail does not move for one of the timer timeouts.</p><p><img alt=snek_apple src=/images/posts/snek_apple.gif title=snek></p><h2 id=more-apple>More apple</h2><p>As you can see in the gif above, we get a new apple when we eat one! I created a <code>spawn</code> signal in <code>Apple.gd</code> that is emitted when the apple&rsquo;s <code>area_entered</code> callback is triggered by the snake eating the apple.</p><p>In the <code>GameManager.gd</code>, I set up a <code>_new_apple()</code> func that will spawn the new instance in a random location in the playarea.</p><pre tabindex=0><code># GameManager.gd
-
-...
-
-func _new_apple():
-	if get_node_or_null(&#34;Apple&#34;) == null :
-		apple = apple.instantiate()
-		add_child(apple)
-		apple.spawn.connect(_new_apple)
-	var temp_coords = bg_layer_coords 
-	var new_apple_pos : Vector2 = temp_coords[randi() % temp_coords.size()]
-	while snake.grid_coords.has(new_apple_pos):
-		new_apple_pos = temp_coords.pick_random()
-	apple.position = grid.map_to_local(new_apple_pos)
-	
-...</code></pre><p>Here, we check to see if there is an Apple node in the scene tree. If there isn&rsquo;t we create an instance of one, and connect the <code>spawn</code> signal, the same signal that it emits on pickup. This is to make sure there is only one <code>Apple.tscn</code> instance, but this could change in the future.jh}</p><p>Oh, and thanks to the newest Godot 4 beta, which is Beta 4, I get to use a new built in array method, <code>pick_random</code>!</p><p>Previously to get a random array element you would have to do something like this</p><pre tabindex=0><code>new_apple_pos = temp_coords[randi() % temp_coords.size()]</code></pre><p>Not the most riveting new feature to test but hey I&rsquo;m down. After that I have a while loop that will garuntee that the random value for the new Apple position is not occupied by the snake body.</p><h2 id=other-improvements>Other improvements</h2><p>I moved the code that is used to update the snake when there are new segments available at the moment of a timer timeout to an <code>update_snake()</code> function. This way it can be used by the <code>ready()</code>, <code>_timer_timeout()</code>, and whatever other function may need it.</p><pre tabindex=0><code># GameManager.gd
-
-...
-func update_snake(grid_coords_pos = snake.grid_coords.size() - 1): 
-	var current_segment = snake_segment.instantiate()
-	add_child(current_segment)
-	current_segment.position = grid.map_to_local(snake.grid_coords[grid_coords_pos])
-	snake.body_segments.append(current_segment)
-...</code></pre><p>I also had to define a default value for the <code>grid_coords_pos</code> argument, since the <code>_timer_timeout()</code> func specifically needs the last segment of the snake to be updated, but the <code>ready()</code> func actually needs to call this for every snake body segment after the head, so the <code>ready()</code> func now looks like this</p><pre tabindex=0><code># GameManager.gd
-
-...
-func _ready():
-	bg_layer_coords = grid.get_used_cells(0)
-	timer.timeout.connect(_timer_timeout)
-	snake = snake_head.instantiate()
-	for s in range(snake.grid_coords.size()):
-		if s == 0:
-			add_child(snake)
-			snake.position = grid.map_to_local(snake.grid_coords[s])
-			snake.body_segments.push_front(snake)
-		else:
-			update_snake(s)
-	_new_apple()
-...</code></pre><p>Next update will most likely be triggering the death state, and some bug fixes</p></content><p><a class=blog-tags href=/tags/godot4/>#godot4</a></p><p><a href='mailto:youngks93@gmail.com?subject=Reply%20to%20"Giving%20snake%20an%20apple"'>Reply to this post by email ↪</a></p></main><footer><small>Kevin Young | Made with <a href=https://github.com/clente/hugo-bearcub>Bear Cub</a></small></footer></body></html>
+<a href=https://youngk.me/index.xml>RSS</a></nav></header><main id=main-content><h1>Giving snake an apple</h1><p class=byline><time datetime=2022-11-05 pubdate>2022-11-05</time></p><content><p>Before tackling any new features, I wanted to make sure I atleast had a super bare minimum state management system in place. And a new beta for Godot 4 is out and I get to use a new (very minor) enhancement :D</p><h2 id=managing-state>Managing state</h2><p>This is pretty much as simple as you can get, which I think fits for the tiny scope of this project. For now this is what that looks like</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln> 1</span><span class=cl><span class=c1># GameManager.gd</span>
+</span></span><span class=line><span class=ln> 2</span><span class=cl>
+</span></span><span class=line><span class=ln> 3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln> 4</span><span class=cl><span class=kd>var</span> <span class=n>current_state</span> <span class=o>:=</span> <span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=o>.</span><span class=n>PAUSE</span>
+</span></span><span class=line><span class=ln> 5</span><span class=cl>
+</span></span><span class=line><span class=ln> 6</span><span class=cl><span class=kd>func</span> <span class=nf>set_state</span><span class=p>(</span><span class=n>new_state</span><span class=p>:</span> <span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=p>):</span>
+</span></span><span class=line><span class=ln> 7</span><span class=cl>	<span class=n>current_state</span> <span class=o>=</span> <span class=n>new_state</span>
+</span></span><span class=line><span class=ln> 8</span><span class=cl>	<span class=k>match</span> <span class=n>current_state</span><span class=p>:</span>
+</span></span><span class=line><span class=ln> 9</span><span class=cl>		<span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=o>.</span><span class=n>PLAY</span><span class=p>:</span>
+</span></span><span class=line><span class=ln>10</span><span class=cl>			<span class=n>timer</span><span class=o>.</span><span class=nf>start</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>11</span><span class=cl>			<span class=n>timer</span><span class=o>.</span><span class=n>paused</span> <span class=o>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=ln>12</span><span class=cl>		<span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=o>.</span><span class=n>PAUSE</span><span class=p>:</span>
+</span></span><span class=line><span class=ln>13</span><span class=cl>			<span class=n>timer</span><span class=o>.</span><span class=n>paused</span> <span class=o>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=ln>14</span><span class=cl>		<span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=o>.</span><span class=n>DEAD</span><span class=p>:</span>
+</span></span><span class=line><span class=ln>15</span><span class=cl>			<span class=n>timer</span><span class=o>.</span><span class=nf>stop</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>16</span><span class=cl><span class=o>...</span></span></span></code></pre></div><p>As you can see, it really only needs to manage the timer for now.</p><p><code>GlobalVars.gd</code> is an autoloaded file that simply has an enum called State.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln>1</span><span class=cl><span class=c1># GlobalVars.gd</span>
+</span></span><span class=line><span class=ln>2</span><span class=cl>
+</span></span><span class=line><span class=ln>3</span><span class=cl><span class=kd>extends</span> <span class=nc>Node</span>
+</span></span><span class=line><span class=ln>4</span><span class=cl>
+</span></span><span class=line><span class=ln>5</span><span class=cl><span class=kd>enum</span> <span class=n>State</span> <span class=p>{</span>
+</span></span><span class=line><span class=ln>6</span><span class=cl>	<span class=n>PAUSE</span><span class=p>,</span>
+</span></span><span class=line><span class=ln>7</span><span class=cl>	<span class=n>PLAY</span><span class=p>,</span>
+</span></span><span class=line><span class=ln>8</span><span class=cl>	<span class=n>DEAD</span>
+</span></span><span class=line><span class=ln>9</span><span class=cl><span class=p>}</span></span></span></code></pre></div><p>Now, any child nodes of the GameManager.tscn can set the state of the game by creating a reference to the GameManager node, and calling the <code>set_state</code> func.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln>1</span><span class=cl><span class=c1># Snake.gd</span>
+</span></span><span class=line><span class=ln>2</span><span class=cl>
+</span></span><span class=line><span class=ln>3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln>4</span><span class=cl><span class=nd>@onready</span> <span class=kd>var</span> <span class=n>manager</span> <span class=o>=</span> <span class=nf>get_parent</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>5</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln>6</span><span class=cl>
+</span></span><span class=line><span class=ln>7</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln>8</span><span class=cl><span class=n>manager</span><span class=o>.</span><span class=nf>set_state</span><span class=p>(</span><span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=o>.</span><span class=n>PLAY</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>9</span><span class=cl><span class=o>...</span></span></span></code></pre></div><h2 id=time-to-eat>Time to eat</h2><p>Setting up the apple scene is simple. A <code>StaticBody2d</code> for the root node, attatch a <code>Sprite</code> node which for now I will lazily drop the snake tail&rsquo;s sprite into as a placehodler, and a <code>CollisionShape2d</code>. For the snake to be able to eat this thing, we&rsquo;ll need a <code>Area2d</code> with a <code>CollisionShape2d</code> as its child node, which I have named <code>PickUpBoundary</code>.</p><p>My inital plan was to use the <code>Area2d</code>&rsquo;s <code>body_entered</code> signal to trigger the function to make the snake grow. However for whatever reason, that signal is not working when the <code>Snake</code> body enters it. Everything is on the same collision layer and mask layer too, so it should be detectable. Might investigate this later and see if its a Godot 4 beta bug.</p><p>So for a backup plan, I gave the <code>snake.tscn</code> an <code>Area2d</code> node called <code>PickUpArea</code>, and I instead connected the <code>area_entered</code> signal.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln> 1</span><span class=cl><span class=c1># Apple.gd</span>
+</span></span><span class=line><span class=ln> 2</span><span class=cl>
+</span></span><span class=line><span class=ln> 3</span><span class=cl><span class=kd>extends</span> <span class=nc>Node2D</span>
+</span></span><span class=line><span class=ln> 4</span><span class=cl>
+</span></span><span class=line><span class=ln> 5</span><span class=cl><span class=nd>@onready</span> <span class=kd>var</span> <span class=n>pickUpArea</span> <span class=o>=</span> <span class=nx>$PickUpBoundary</span>
+</span></span><span class=line><span class=ln> 6</span><span class=cl>
+</span></span><span class=line><span class=ln> 7</span><span class=cl><span class=kd>signal</span> <span class=n>spawn</span>
+</span></span><span class=line><span class=ln> 8</span><span class=cl>
+</span></span><span class=line><span class=ln> 9</span><span class=cl><span class=kd>func</span> <span class=nf>_ready</span><span class=p>():</span>
+</span></span><span class=line><span class=ln>10</span><span class=cl>	<span class=n>pickUpArea</span><span class=o>.</span><span class=n>area_entered</span><span class=o>.</span><span class=nf>connect</span><span class=p>(</span><span class=n>_area_pickup</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>11</span><span class=cl>
+</span></span><span class=line><span class=ln>12</span><span class=cl><span class=kd>func</span> <span class=nf>_area_pickup</span><span class=p>(</span><span class=n>area</span><span class=p>):</span>
+</span></span><span class=line><span class=ln>13</span><span class=cl>	<span class=k>if</span> <span class=n>area</span><span class=o>.</span><span class=nf>get_parent</span><span class=p>()</span><span class=o>.</span><span class=nf>has_method</span><span class=p>(</span><span class=s2>&#34;grow&#34;</span><span class=p>):</span>
+</span></span><span class=line><span class=ln>14</span><span class=cl>		<span class=n>area</span><span class=o>.</span><span class=nf>get_parent</span><span class=p>()</span><span class=o>.</span><span class=nf>grow</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>15</span><span class=cl>		<span class=nf>emit_signal</span><span class=p>(</span><span class=s2>&#34;spawn&#34;</span><span class=p>)</span></span></span></code></pre></div><p>The callback function simply checks if the parent of the <code>Area2d</code> that entered the <code>PickUpBoundary</code> has a <code>grow</code> method, and calls it if it does. Which looks like this</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln>1</span><span class=cl><span class=c1># Snake.gd</span>
+</span></span><span class=line><span class=ln>2</span><span class=cl>
+</span></span><span class=line><span class=ln>3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln>4</span><span class=cl>
+</span></span><span class=line><span class=ln>5</span><span class=cl><span class=kd>func</span> <span class=nf>grow</span><span class=p>():</span>
+</span></span><span class=line><span class=ln>6</span><span class=cl>	<span class=kd>var</span> <span class=n>new_seg</span> <span class=o>=</span> <span class=n>grid_coords</span><span class=p>[</span><span class=n>grid_coords</span><span class=o>.</span><span class=nf>size</span><span class=p>()</span> <span class=o>-</span> <span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=ln>7</span><span class=cl>	<span class=n>grid_coords</span><span class=o>.</span><span class=nf>append</span><span class=p>(</span><span class=n>new_seg</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>8</span><span class=cl>
+</span></span><span class=line><span class=ln>9</span><span class=cl><span class=o>...</span></span></span></code></pre></div><p>The reason I am able to simply set the <code>Vector2</code> position for the new segment, rather than doing some vector math to calculate the next position, is thanks to my logic for moving the snake in my <code>_timer_timeout</code> func in the <code>GameManager.gd</code>.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln> 1</span><span class=cl><span class=c1>#GameManager.gd</span>
+</span></span><span class=line><span class=ln> 2</span><span class=cl>
+</span></span><span class=line><span class=ln> 3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln> 4</span><span class=cl><span class=kd>func</span> <span class=nf>_timer_timeout</span><span class=p>():</span>
+</span></span><span class=line><span class=ln> 5</span><span class=cl>	<span class=kd>var</span> <span class=n>segment_next</span>
+</span></span><span class=line><span class=ln> 6</span><span class=cl>	<span class=kd>var</span> <span class=n>segment_previous</span>
+</span></span><span class=line><span class=ln> 7</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln> 8</span><span class=cl>	<span class=k>for</span> <span class=n>s</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=o>.</span><span class=nf>size</span><span class=p>()):</span>
+</span></span><span class=line><span class=ln> 9</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln>10</span><span class=cl>		<span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=ln>11</span><span class=cl>			<span class=n>grid</span><span class=o>.</span><span class=nf>erase_cell</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=p>[</span><span class=n>s</span><span class=p>])</span>
+</span></span><span class=line><span class=ln>12</span><span class=cl>			<span class=n>segment_previous</span> <span class=o>=</span> <span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=p>[</span><span class=n>s</span><span class=p>]</span>
+</span></span><span class=line><span class=ln>13</span><span class=cl>			<span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=p>[</span><span class=n>s</span><span class=p>]</span> <span class=o>=</span> <span class=n>segment_next</span>
+</span></span><span class=line><span class=ln>14</span><span class=cl>			<span class=n>snake</span><span class=o>.</span><span class=n>body_segments</span><span class=p>[</span><span class=n>s</span><span class=p>]</span><span class=o>.</span><span class=n>position</span> <span class=o>=</span> <span class=n>grid</span><span class=o>.</span><span class=nf>map_to_local</span><span class=p>(</span><span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=p>[</span><span class=n>s</span><span class=p>])</span>
+</span></span><span class=line><span class=ln>15</span><span class=cl>			<span class=n>segment_next</span> <span class=o>=</span> <span class=n>segment_previous</span>
+</span></span><span class=line><span class=ln>16</span><span class=cl>	<span class=k>if</span> <span class=n>current_state</span> <span class=o>==</span> <span class=n>GlobalVars</span><span class=o>.</span><span class=n>State</span><span class=o>.</span><span class=n>PLAY</span> <span class=p>:</span> 
+</span></span><span class=line><span class=ln>17</span><span class=cl>		<span class=n>timer</span><span class=o>.</span><span class=nf>start</span><span class=p>()</span></span></span></code></pre></div><p>Because I&rsquo;m just scooting the <code>Vector2</code>&rsquo;s by keeping the previous segment in memory, it just kinda works. It might <em>feel</em> a little lazy to have the last 2 <code>Vector2</code>&rsquo;s in the array be the same value for a moment, but in reality this means that when that last line <code>segment_next = segment_previous</code> is executed for the new snake tail segment, it&rsquo;s making the previous snake&rsquo;s last tail segment the new one, which is exactly what we want. It ends up having effect of &ldquo;growing forward&rdquo; as the snake moves, since the end of the tail does not move for one of the timer timeouts.</p><p><img alt=snek_apple src=/images/posts/snek_apple.gif title=snek></p><h2 id=more-apple>More apple</h2><p>As you can see in the gif above, we get a new apple when we eat one! I created a <code>spawn</code> signal in <code>Apple.gd</code> that is emitted when the apple&rsquo;s <code>area_entered</code> callback is triggered by the snake eating the apple.</p><p>In the <code>GameManager.gd</code>, I set up a <code>_new_apple()</code> func that will spawn the new instance in a random location in the playarea.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln> 1</span><span class=cl><span class=c1># GameManager.gd</span>
+</span></span><span class=line><span class=ln> 2</span><span class=cl>
+</span></span><span class=line><span class=ln> 3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln> 4</span><span class=cl>
+</span></span><span class=line><span class=ln> 5</span><span class=cl><span class=kd>func</span> <span class=nf>_new_apple</span><span class=p>():</span>
+</span></span><span class=line><span class=ln> 6</span><span class=cl>	<span class=k>if</span> <span class=nf>get_node_or_null</span><span class=p>(</span><span class=s2>&#34;Apple&#34;</span><span class=p>)</span> <span class=o>==</span> <span class=kt>null</span> <span class=p>:</span>
+</span></span><span class=line><span class=ln> 7</span><span class=cl>		<span class=n>apple</span> <span class=o>=</span> <span class=n>apple</span><span class=o>.</span><span class=nf>instantiate</span><span class=p>()</span>
+</span></span><span class=line><span class=ln> 8</span><span class=cl>		<span class=nf>add_child</span><span class=p>(</span><span class=n>apple</span><span class=p>)</span>
+</span></span><span class=line><span class=ln> 9</span><span class=cl>		<span class=n>apple</span><span class=o>.</span><span class=n>spawn</span><span class=o>.</span><span class=nf>connect</span><span class=p>(</span><span class=n>_new_apple</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>10</span><span class=cl>	<span class=kd>var</span> <span class=n>temp_coords</span> <span class=o>=</span> <span class=n>bg_layer_coords</span> 
+</span></span><span class=line><span class=ln>11</span><span class=cl>	<span class=kd>var</span> <span class=n>new_apple_pos</span> <span class=p>:</span> <span class=nc>Vector2</span> <span class=o>=</span> <span class=n>temp_coords</span><span class=p>[</span><span class=nb>randi</span><span class=p>()</span> <span class=o>%</span> <span class=n>temp_coords</span><span class=o>.</span><span class=nf>size</span><span class=p>()]</span>
+</span></span><span class=line><span class=ln>12</span><span class=cl>	<span class=k>while</span> <span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=o>.</span><span class=nf>has</span><span class=p>(</span><span class=n>new_apple_pos</span><span class=p>):</span>
+</span></span><span class=line><span class=ln>13</span><span class=cl>		<span class=n>new_apple_pos</span> <span class=o>=</span> <span class=n>temp_coords</span><span class=o>.</span><span class=nf>pick_random</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>14</span><span class=cl>	<span class=n>apple</span><span class=o>.</span><span class=n>position</span> <span class=o>=</span> <span class=n>grid</span><span class=o>.</span><span class=nf>map_to_local</span><span class=p>(</span><span class=n>new_apple_pos</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>15</span><span class=cl>	
+</span></span><span class=line><span class=ln>16</span><span class=cl><span class=o>...</span></span></span></code></pre></div><p>Here, we check to see if there is an Apple node in the scene tree. If there isn&rsquo;t we create an instance of one, and connect the <code>spawn</code> signal, the same signal that it emits on pickup. This is to make sure there is only one <code>Apple.tscn</code> instance, but this could change in the future.jh}</p><p>Oh, and thanks to the newest Godot 4 beta, which is Beta 4, I get to use a new built in array method, <code>pick_random</code>!</p><p>Previously to get a random array element you would have to do something like this<div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln>1</span><span class=cl><span class=n>new_apple_pos</span> <span class=o>=</span> <span class=n>temp_coords</span><span class=p>[</span><span class=nb>randi</span><span class=p>()</span> <span class=o>%</span> <span class=n>temp_coords</span><span class=o>.</span><span class=nf>size</span><span class=p>()]</span></span></span></code></pre></div></p><p>Not the most riveting new feature to test but hey I&rsquo;m down. After that I have a while loop that will garuntee that the random value for the new Apple position is not occupied by the snake body.</p><h2 id=other-improvements>Other improvements</h2><p>I moved the code that is used to update the snake when there are new segments available at the moment of a timer timeout to an <code>update_snake()</code> function. This way it can be used by the <code>ready()</code>, <code>_timer_timeout()</code>, and whatever other function may need it.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln>1</span><span class=cl><span class=c1># GameManager.gd</span>
+</span></span><span class=line><span class=ln>2</span><span class=cl>
+</span></span><span class=line><span class=ln>3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln>4</span><span class=cl><span class=kd>func</span> <span class=nf>update_snake</span><span class=p>(</span><span class=n>grid_coords_pos</span> <span class=o>=</span> <span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=o>.</span><span class=nf>size</span><span class=p>()</span> <span class=o>-</span> <span class=mi>1</span><span class=p>):</span> 
+</span></span><span class=line><span class=ln>5</span><span class=cl>	<span class=kd>var</span> <span class=n>current_segment</span> <span class=o>=</span> <span class=n>snake_segment</span><span class=o>.</span><span class=nf>instantiate</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>6</span><span class=cl>	<span class=nf>add_child</span><span class=p>(</span><span class=n>current_segment</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>7</span><span class=cl>	<span class=n>current_segment</span><span class=o>.</span><span class=n>position</span> <span class=o>=</span> <span class=n>grid</span><span class=o>.</span><span class=nf>map_to_local</span><span class=p>(</span><span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=p>[</span><span class=n>grid_coords_pos</span><span class=p>])</span>
+</span></span><span class=line><span class=ln>8</span><span class=cl>	<span class=n>snake</span><span class=o>.</span><span class=n>body_segments</span><span class=o>.</span><span class=nf>append</span><span class=p>(</span><span class=n>current_segment</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>9</span><span class=cl><span class=o>...</span></span></span></code></pre></div><p>I also had to define a default value for the <code>grid_coords_pos</code> argument, since the <code>_timer_timeout()</code> func specifically needs the last segment of the snake to be updated, but the <code>ready()</code> func actually needs to call this for every snake body segment after the head, so the <code>ready()</code> func now looks like this</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-gd data-lang=gd><span class=line><span class=ln> 1</span><span class=cl><span class=c1># GameManager.gd</span>
+</span></span><span class=line><span class=ln> 2</span><span class=cl>
+</span></span><span class=line><span class=ln> 3</span><span class=cl><span class=o>...</span>
+</span></span><span class=line><span class=ln> 4</span><span class=cl><span class=kd>func</span> <span class=nf>_ready</span><span class=p>():</span>
+</span></span><span class=line><span class=ln> 5</span><span class=cl>	<span class=n>bg_layer_coords</span> <span class=o>=</span> <span class=n>grid</span><span class=o>.</span><span class=nf>get_used_cells</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=ln> 6</span><span class=cl>	<span class=n>timer</span><span class=o>.</span><span class=n>timeout</span><span class=o>.</span><span class=nf>connect</span><span class=p>(</span><span class=n>_timer_timeout</span><span class=p>)</span>
+</span></span><span class=line><span class=ln> 7</span><span class=cl>	<span class=n>snake</span> <span class=o>=</span> <span class=n>snake_head</span><span class=o>.</span><span class=nf>instantiate</span><span class=p>()</span>
+</span></span><span class=line><span class=ln> 8</span><span class=cl>	<span class=k>for</span> <span class=n>s</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=o>.</span><span class=nf>size</span><span class=p>()):</span>
+</span></span><span class=line><span class=ln> 9</span><span class=cl>		<span class=k>if</span> <span class=n>s</span> <span class=o>==</span> <span class=mi>0</span><span class=p>:</span>
+</span></span><span class=line><span class=ln>10</span><span class=cl>			<span class=nf>add_child</span><span class=p>(</span><span class=n>snake</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>11</span><span class=cl>			<span class=n>snake</span><span class=o>.</span><span class=n>position</span> <span class=o>=</span> <span class=n>grid</span><span class=o>.</span><span class=nf>map_to_local</span><span class=p>(</span><span class=n>snake</span><span class=o>.</span><span class=n>grid_coords</span><span class=p>[</span><span class=n>s</span><span class=p>])</span>
+</span></span><span class=line><span class=ln>12</span><span class=cl>			<span class=n>snake</span><span class=o>.</span><span class=n>body_segments</span><span class=o>.</span><span class=nf>push_front</span><span class=p>(</span><span class=n>snake</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>13</span><span class=cl>		<span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=ln>14</span><span class=cl>			<span class=nf>update_snake</span><span class=p>(</span><span class=n>s</span><span class=p>)</span>
+</span></span><span class=line><span class=ln>15</span><span class=cl>	<span class=nf>_new_apple</span><span class=p>()</span>
+</span></span><span class=line><span class=ln>16</span><span class=cl><span class=o>...</span></span></span></code></pre></div><p>Next update will most likely be triggering the death state, and some bug fixes</p></content><p><a class=blog-tags href=/tags/godot4/>#godot4</a></p><p><a href='mailto:youngks93@gmail.com?subject=Reply%20to%20"Giving%20snake%20an%20apple"'>Reply to this post by email ↪</a></p></main><footer><small>Kevin Young | Made with <a href=https://github.com/clente/hugo-bearcub>Bear Cub</a></small></footer></body></html>
