@@ -108,7 +108,7 @@
 /* NameException .chroma .ne {  } */
 /* NameFunction */
 .chroma .nf {
-    color: #fabd2f;
+    color: #b8bb26;
 }
 /* NameFunctionMagic .chroma .fm {  } */
 /* NameLabel */
@@ -175,7 +175,7 @@
 }
 /* LiteralStringDouble */
 .chroma .s2 {
-    color: #b8bb26;
+    color: #fabd2f;
 }
 /* LiteralStringEscape */
 .chroma .se {
