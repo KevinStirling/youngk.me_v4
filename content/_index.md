@@ -13,6 +13,6 @@ I write about my experiences making games and web technology on my **[blog](/blo
 ## Links ✨
 
 🗣️ **[Mastodon](https://mastodon.gamedev.place/@kevinyoung)**
-👨‍💻 **[Github](https://github.com/KevinStirling/)**
-🎮 **[My Games](https://necrokev.itch.io/)**
-👨‍💼**[LinkedIn](https://www.linkedin.com/in/kevin-young-5a6386b0/)**
+  👨‍💻 **[Github](https://github.com/KevinStirling/)**
+  🎮 **[My Games](https://necrokev.itch.io/)**
+  👨‍💼**[LinkedIn](https://www.linkedin.com/in/kevin-young-5a6386b0/)**

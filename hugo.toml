@@ -12,6 +12,7 @@ enableRobotsTXT = true
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src#unsafe_inline_styles
 [markup]
   [markup.highlight]
+    style = 'gruvbox'
     lineNos = true
     lineNumbersInTable = false
     # This allows Bear Cub to use a variation of Dracula that is more accessible
