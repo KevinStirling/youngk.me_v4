@@ -36,3 +36,14 @@ code {
     color: #ebdbb2;
     background-color: #282828 !important;
 }
+
+img[alt="project-img"] {
+    width: 200px;
+    float: right;
+}
+
+table,
+th,
+td {
+    border: none !important;
+}

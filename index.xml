@@ -1,6 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Kevin Young</title><link>https://youngk.me/</link><description>Recent content on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 31 Dec 2023 15:46:28 -0500</lastBuildDate><atom:link href="https://youngk.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://youngk.me/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/projects/</guid><description>Games I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</description><content:encoded><![CDATA[<h1 id="games">Games</h1>
-<p><a href="https://necrokev.itch.io/candlerun"><img alt="Canlderun &ldquo;cover&rdquo; art" src="../../images/posts/candlerun_cover.png"></a></p>
-<p>I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Kevin Young</title><link>https://youngk.me/</link><description>Recent content on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 31 Dec 2023 15:46:28 -0500</lastBuildDate><atom:link href="https://youngk.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://youngk.me/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/projects/</guid><description>Projects I made Candlerun for the Godot Wild Jam #64. My first game jam completion! View MLB scores live in your terminal with scorebug.sh</description><content:encoded><![CDATA[<h1 id="projects">Projects</h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://necrokev.itch.io/candlerun"><img alt="project-img" src="../../images/projects/candlerun_cover.png"></a></td>
+<td>I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</td>
+</tr>
+<tr>
+<td><a href="https://github.com/KevinStirling/scorebug.sh"><img alt="project-img" src="../../images/projects/sb_preview_sm.png"></a></td>
+<td>View MLB scores live in your terminal with scorebug.sh</td>
+</tr>
+</tbody>
+</table>
 ]]></content:encoded></item><item><title>Godot Wild Jam 64</title><link>https://youngk.me/blog/godot-wild-jam-64/</link><pubDate>Sun, 31 Dec 2023 15:46:28 -0500</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/blog/godot-wild-jam-64/</guid><description>Godot Wild Jam 64 happened this past month, with the theme Illumination, and I decided to give it a go! This was my 3rd game jam attempt, although this would be my first submitted entry. It&amp;rsquo;s called CandleRun, and you can check it out here.
 Along with the main theme, the 3 option &amp;ldquo;wild card&amp;rdquo; themes were &amp;ldquo;white out/ freezing out&amp;rdquo;, &amp;ldquo;blood is fuel&amp;rdquo;, and &amp;ldquo;trash everywhere&amp;rdquo;.
 Design Process I originally planned on a completely different game.</description><content:encoded><![CDATA[<p>Godot Wild Jam 64 happened this past month, with the theme Illumination, and I decided to give it a go! This was my 3rd game jam attempt, although this would be my first submitted entry. It&rsquo;s called CandleRun, and you can check it out <a href="https://necrokev.itch.io/candlerun">here</a>.</p>
