@@ -1,0 +1,10 @@
+/* TODO do this for the project page via shortcode */
+strong {
+    text-decoration-color: #fabd2f !important;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    font-family: Space Grotesk;
+    font-size: 28px;
+    margin: a;
+    display: block;
+}
