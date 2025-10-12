@@ -1,10 +1,13 @@
-/* TODO do this for the project page via shortcode */
-strong {
+/* TODO do this for the project page  */
+.project-title {
     text-decoration-color: #fabd2f !important;
     text-decoration: underline;
     text-decoration-style: wavy;
     font-family: Space Grotesk;
     font-size: 28px;
-    margin: a;
+    margin: auto;
     display: block;
+}
+
+.project-desc {
 }

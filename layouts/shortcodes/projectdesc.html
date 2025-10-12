@@ -1,0 +1,8 @@
+{{ $style := resources.Get "projects.css" | minify | fingerprint }}
+<link
+    rel="stylesheet"
+    href="{{ $style.RelPermalink }}"
+    integrity="{{ $style.Data.Integrity }}"
+/>
+<h4 class="project-title">{{ $.Get "title" }}</h4>
+<p class="project-desc">{{ $.Get "desc" }}</p>
