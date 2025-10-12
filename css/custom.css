@@ -7,6 +7,7 @@ a:visited {
     text-decoration: none;
     font-family: Space Grotesk;
 }
+
 h1,
 h2,
 h3,
@@ -37,13 +38,10 @@ code {
     background-color: #282828 !important;
 }
 
-img[alt="project-img"] {
-    width: 200px;
-    float: right;
-}
-
 table,
 th,
 td {
     border: none !important;
+    padding-left: 2vw;
+    padding-right: 2vw;
 }
