@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Kevin Young</title><link>https://youngk.me/</link><description>Recent content on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 31 Dec 2023 15:46:28 -0500</lastBuildDate><atom:link href="https://youngk.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://youngk.me/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/projects/</guid><description>Projects Scorebug.sh View MLB scores live in your terminal with scorebug.sh Candlerun I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</description><content:encoded><![CDATA[<h1 id="projects">Projects</h1>
-<table>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Kevin Young</title><link>https://youngk.me/</link><description>Recent content on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 31 Dec 2023 15:46:28 -0500</lastBuildDate><atom:link href="https://youngk.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://youngk.me/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/projects/</guid><description>Scorebug.sh View MLB scores live in your terminal with scorebug.sh
+Candlerun I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</description><content:encoded><![CDATA[<table>
 <thead>
 <tr>
 <th style="text-align:right"></th>
@@ -8,12 +8,28 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:right"><strong>Scorebug.sh</strong> View MLB scores live in your terminal with scorebug.sh</td>
+<td style="text-align:right">
+<link
+    rel="stylesheet"
+    href="/projects.min.f5959ff2231a2d77f4d3ea50050e83bac0083fbfe3bcb752a104c4104b39f035.css"
+    integrity="sha256-9ZWf8iMaLXf00&#43;pQBQ6DusAIP7/jvLdSoQTEEEs58DU="
+/>
+<h4 class="project-title">Scorebug.sh</h4>
+<p class="project-desc">View MLB scores live in your terminal with scorebug.sh</p>
+</td>
 <td style="text-align:left"><a href="https://github.com/KevinStirling/scorebug.sh"><img alt="project-img" src="../../images/projects/sb_preview_sm.png"></a></td>
 </tr>
 <tr>
 <td style="text-align:right"><a href="https://necrokev.itch.io/candlerun"><img alt="project-img" src="../../images/projects/candlerun_cover.png"></a></td>
-<td style="text-align:left"><strong>Candlerun</strong> I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</td>
+<td style="text-align:left">
+<link
+    rel="stylesheet"
+    href="/projects.min.f5959ff2231a2d77f4d3ea50050e83bac0083fbfe3bcb752a104c4104b39f035.css"
+    integrity="sha256-9ZWf8iMaLXf00&#43;pQBQ6DusAIP7/jvLdSoQTEEEs58DU="
+/>
+<h4 class="project-title">Candlerun</h4>
+<p class="project-desc">I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</p>
+</td>
 </tr>
 </tbody>
 </table>
