@@ -24,7 +24,7 @@ Last month I just finished up a refactor that will allow me to iterate on this a
 
 You can check out [scorebug.sh here](https://github.com/KevinStirling/scorebug.sh)
 
-# [Radix](https://github.com/KevinStirling/radix)
+# _[Radix](https://github.com/KevinStirling/radix)_
 >_Retro fps godot project_
 
 This is a project that I started ~2 years ago, initially just to test out some Godot pluins ([GoldGdt](https://github.com/ratmarrow/GoldGdt) & [func_godot](https://github.com/func-godot)), to see if I could quickly whip up something that "felt" like half-life in the Godot engine. I quickly realized that the GoldGdt plugin, which provides a half-life-esque character controller, was not really the most extensible for my needs. I put the project down for about a year. 
