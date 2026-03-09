@@ -38,6 +38,7 @@ I have so many thoughts I want to share on this endeavor, but for now my most im
 	- Create an FPS game that feels good to ME. This may just be me chasing the "source engine feel" but hey... why discount perfection ;)
 
 	- Build a set of tools to create cool FPS experiences with, for years to come.
+I gave some serious thought to commiting to such a large project, with such an open ended goal. I ended up coming back to it becuase it's both an obsession, and just satisfying to slowly chip away at these large undertakings. I don't expect it to be done fast, and that's fine. I can always take breaks for game jams and stuff anyways :) 
 
 If you are still reading- thanks, stranger! Not much to show for now, so feel free to poke around the [Radix codebase](https://github.com/KevinStirling/radix). 
 
