@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Kevin Young</title><link>https://youngk.me/</link><description>Recent content on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 31 Dec 2023 15:46:28 -0500</lastBuildDate><atom:link href="https://youngk.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://youngk.me/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/projects/</guid><description>Scorebug.sh View MLB scores live in your terminal with scorebug.sh
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Kevin Young</title><link>https://youngk.me/</link><description>Recent content on Kevin Young</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><managingEditor>youngks93@gmail.com (Kevin Young)</managingEditor><webMaster>youngks93@gmail.com (Kevin Young)</webMaster><copyright>Kevin Young</copyright><lastBuildDate>Sun, 08 Mar 2026 18:29:47 -0400</lastBuildDate><atom:link href="https://youngk.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://youngk.me/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/projects/</guid><description>Scorebug.sh View MLB scores live in your terminal with scorebug.sh
 Candlerun I made Candlerun for the Godot Wild Jam #64. My first game jam completion!</description><content:encoded><![CDATA[<table>
 <thead>
 <tr>
@@ -33,6 +33,33 @@ Candlerun I made Candlerun for the Godot Wild Jam #64. My first game jam complet
 </tr>
 </tbody>
 </table>
+]]></content:encoded></item><item><title>Focus for 2026</title><link>https://youngk.me/blog/focus-for-2026/</link><pubDate>Sun, 08 Mar 2026 18:29:47 -0400</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/blog/focus-for-2026/</guid><description>The past couple years has been a bit of a roller coaster for me, and as you may be able to tell by the date on this post about setting my goals for the year, I&amp;rsquo;m still working on it :D
+This isn&amp;rsquo;t the place for my to tell you why, but I am excited to talk about all the stuff I plan to work on in 2026.
+scorebug.sh Live mlb scores in the terminal</description><content:encoded><![CDATA[<p>The past couple years has been a bit of a roller coaster for me, and as you may be able to tell by the date on this post about setting my goals for the year, I&rsquo;m still working on it :D</p>
+<p>This isn&rsquo;t the place for my to tell you why, but I am excited to talk about all the stuff I plan to work on in 2026.</p>
+<h1 id="_scorebugshhttpsgithubcomkevinstirlingscorebugsh_"><em><a href="https://github.com/KevinStirling/scorebug.sh">scorebug.sh</a></em></h1>
+<blockquote>
+<p><em>Live mlb scores in the terminal</em></p>
+</blockquote>
+<p>Late last year, I was looking for an excuse to use <a href="https://charm.land/">Charmbracelet&rsquo;s</a> popular ecosystem for building TUI&rsquo;s, and found my excuse while watching the lead up to the 2025 MLB post season.</p>
+<p>I had recently been getting really annoyed with the MLB apps, the various hoops to jump through, and insane fees to pay just to be able to track and watch the sport. I started poking around at the MLB stats api and&hellip; damn this is all just kinda out there for free huh?</p>
+<p>I started piecing together a way to display live game scores in the terminal that update automatically. Even with just this feature alone, I could see the potential.</p>
+<p><img alt="scorebug" src="/images/projects/sb_preview_sm.png" title="scorebug"></p>
+<p>Last month I just finished up a refactor that will allow me to iterate on this alot faster. I have a lot of fun ideas planned, including player stats, play-by-play, and possibly even visualizing the plays with the help of some of charm&rsquo;s more experimental libraries.</p>
+<p>You can check out <a href="https://github.com/KevinStirling/scorebug.sh">scorebug.sh here</a></p>
+<h1 id="radixhttpsgithubcomkevinstirlingradix"><a href="https://github.com/KevinStirling/radix">Radix</a></h1>
+<blockquote>
+<p><em>Retro fps godot project</em></p>
+</blockquote>
+<p>This is a project that I started ~2 years ago, initially just to test out some Godot pluins (<a href="https://github.com/ratmarrow/GoldGdt">GoldGdt</a> &amp; <a href="https://github.com/func-godot">func_godot</a>), to see if I could quickly whip up something that &ldquo;felt&rdquo; like half-life in the Godot engine. I quickly realized that the GoldGdt plugin, which provides a half-life-esque character controller, was not really the most extensible for my needs. I put the project down for about a year.</p>
+<p>Fast forward after several quake &amp; source engine history lessons, source code deep-dives, obsessing over source engine modding / map making, and creating an automated set of <a href="https://github.com/KevinStirling/one-point-six">shell scripts and docker-compose</a> for running cs 1.6 servers later&hellip; I return to Radix with my new goals!</p>
+<h2 id="radix-goals">Radix goals</h2>
+<p>I have so many thoughts I want to share on this endeavor, but for now my most important goals for this project are to&hellip;</p>
+<pre><code>- Create an FPS game that feels good to ME. This may just be me chasing the &quot;source engine feel&quot; but hey... why discount perfection ;)
+
+- Build a set of tools to create cool FPS experiences with, for years to come.
+</code></pre>
+<p>If you are still reading- thanks, stranger! Not much to show for now, so feel free to poke around the <a href="https://github.com/KevinStirling/radix">Radix codebase</a>.</p>
 ]]></content:encoded></item><item><title>Godot Wild Jam 64</title><link>https://youngk.me/blog/godot-wild-jam-64/</link><pubDate>Sun, 31 Dec 2023 15:46:28 -0500</pubDate><author>youngks93@gmail.com (Kevin Young)</author><guid>https://youngk.me/blog/godot-wild-jam-64/</guid><description>Godot Wild Jam 64 happened this past month, with the theme Illumination, and I decided to give it a go! This was my 3rd game jam attempt, although this would be my first submitted entry. It&amp;rsquo;s called CandleRun, and you can check it out here.
 Along with the main theme, the 3 option &amp;ldquo;wild card&amp;rdquo; themes were &amp;ldquo;white out/ freezing out&amp;rdquo;, &amp;ldquo;blood is fuel&amp;rdquo;, and &amp;ldquo;trash everywhere&amp;rdquo;.
 Design Process I originally planned on a completely different game.</description><content:encoded><![CDATA[<p>Godot Wild Jam 64 happened this past month, with the theme Illumination, and I decided to give it a go! This was my 3rd game jam attempt, although this would be my first submitted entry. It&rsquo;s called CandleRun, and you can check it out <a href="https://necrokev.itch.io/candlerun">here</a>.</p>
