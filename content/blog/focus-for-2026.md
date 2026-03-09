@@ -4,9 +4,9 @@ date = 2026-03-08T18:29:47-04:00
 draft = false
 +++
 
-The past couple years has been a bit of a roller coaster for me, and as you may be able to tell by the date on this post about setting my goals for the year, I'm still working on it :D 
+The past couple years have been a bit of a roller coaster for me, and as you may be able to tell by the date on this post about setting my goals for the year, I'm still working on it :D 
 
-This isn't the place for my to tell you why, but I am excited to talk about all the stuff I plan to work on in 2026.
+This isn't the place for me to tell you why, but I am excited to talk about all the stuff I plan to work on in 2026.
 
 
 # _[scorebug.sh](https://github.com/KevinStirling/scorebug.sh)_
