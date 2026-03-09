@@ -12,7 +12,7 @@ scorebug.sh Live mlb scores in the terminal</description><content:encoded><![CDA
 <p><img alt="scorebug" src="/images/projects/sb_preview_sm.png" title="scorebug"></p>
 <p>Last month I just finished up a refactor that will allow me to iterate on this alot faster. I have a lot of fun ideas planned, including player stats, play-by-play, and possibly even visualizing the plays with the help of some of charm&rsquo;s more experimental libraries.</p>
 <p>You can check out <a href="https://github.com/KevinStirling/scorebug.sh">scorebug.sh here</a></p>
-<h1 id="radixhttpsgithubcomkevinstirlingradix"><a href="https://github.com/KevinStirling/radix">Radix</a></h1>
+<h1 id="_radixhttpsgithubcomkevinstirlingradix_"><em><a href="https://github.com/KevinStirling/radix">Radix</a></em></h1>
 <blockquote>
 <p><em>Retro fps godot project</em></p>
 </blockquote>
