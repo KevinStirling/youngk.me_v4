@@ -4,11 +4,54 @@ date = 2026-05-13T20:29:02-04:00
 draft = true
 +++
 # What's huh?
-A couple months ago, a game jam that I did not complete sent me on an adventure. I chose to make a game with a grid inventory system, and since I knew it would be atleast a little difficult, I wanted to make it the main interface for interaction. After struggling to figure out something that worked during the jam time, I ended up just wanting to solve this problem for myself, so I gave up on the jam to do just that, and in the end I came up with a solution I really like!
+I discovered some nice tricks in godot that allowed me to create a pretty simple implementation of a grid based inventory system for a game I am working on. I am going for a "Resident evil style" system, so organizing objects with different sizes and shapes, and being able to rotate them to fit the together is key.
 
-Just for reference, I am going for a "Resident Evil style" inventory system, so organizing objects with different sizes and shapes, and being able to rotate them to fit the together.
+> NOTE! This isn't going to be an in-depth tutorial, but if you want to check the code out for yourself, the full source is availble on my github in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
 
-> NOTE! This isn't going to be an in-depth tutorial, mostly a discussion of some cool tricks to make this system work nicely. If you want to try this out for yourself though, the full source is availble on my github in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
+## Some obsatcles
+There were a couple issues I had to tackle from my earlier attempts at this. 
+- How do I make this grid in such a way, where moving the grid in world space doesn't require too much additional math to account for offsets / local vs global space?
+- How do I contain the functionality of the grid only withing the scope of the grid's container without going crazy with signals and `Area2D` nodes?
+- How do I track what grid cells are valid for the play to drop their items?
+
+I am going to gloss over the basics of this project, such as drag & drop, and global signal buses, so I can focus on what really helped me out in getting this working.
+
+# The grid
+After attempting to use Godot's built in control nodes such as `GridContainer`, I can safely say now that I would avoid these for making a grid inventory. It can be done, but it gets complicated. A much simpler approach, is to utilize a handy `Vector2` method, called [snapped( )](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2-method-snapped). You can read the docs there, but basically it takes the Vector2 you call it on, and snaps the x and y to the closest multiple of the Vector2 you pass in the `step` parameter. This is perfect for creating a "snap to grid" feel without acually "making a grid", if that makes sense.
+
+(gif of grid snapping here)
+
+Using `Vector2.snapped()` in combination with [Rect2](https://docs.godotengine.org/en/stable/classes/class_rect2.html) is the perfect combination here. `Rect2` allows you to do boundaries checks within a rectangular 2d space. The reason I know this is handy, is I previously implemented my own logic for determining if a node was within the grid bounds, using only the global position of the origin, and some math to determine the area required for the item to fit in the grid based on its size. It's do able, but ends up a bit messy. This use case is actually exactly what `Rect2` is designed for. So, here in my `inventory.gd` script, I am using it for some boundary checks. I also have gone ahead and drawn a simple grid based on my grid's dimensions.
+_inventory.gd_
+```gdscript
+class_name Inventory
+extends Node2D
+
+@export var grid_size: Vector2 = Vector2(5,5)
+@export var cell_size: Vector2 = Vector2(128,128)
+
+var inventory_list: Array
+
+func _draw() -> void:
+	# draw the grid based on grid_size & cell_size
+	for row in range(grid_size.y + 1):
+		draw_line(Vector2(0, cell_size.y * row), Vector2(cell_size.x * grid_size.x, cell_size.x * row),Color.ALICE_BLUE, 2.0, false)
+	for col in range(grid_size.x + 1):
+		draw_line(Vector2(cell_size.x * col, 0), Vector2(cell_size.x * col, cell_size.y * grid_size.y), Color.ALICE_BLUE, 2.0, false)
+
+## Returns true if a position is in bounds of the grid, and accounts for the area of the item at that position
+func in_bounds(position: Vector2, area: Vector2) -> bool:
+	var margin = cell_size / 2
+	var grid_rect = Rect2(global_position - margin, grid_size * cell_size + margin * 2)
+	var item_rect = Rect2(position, area)
+	return grid_rect.encloses(item_rect)
+
+func add_to_inventory(item) -> void:
+	inventory_list.append(item)
+
+func remove_from_inventory(item) -> void:
+	inventory_list.erase(item)
+```
 
 
 # Some basics
