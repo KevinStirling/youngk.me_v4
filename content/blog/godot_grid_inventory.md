@@ -4,137 +4,35 @@ date = 2026-05-13T20:29:02-04:00
 draft = true
 +++
 # What's huh?
-I discovered some nice tricks in godot that allowed me to create a pretty simple implementation of a grid based inventory system for a game I am working on. I am going for a "Resident evil style" system, so organizing objects with different sizes and shapes, and being able to rotate them to fit the together is key.
+I discovered some nice tricks in godot that allowed me to create a pretty simple "Resident evil style" grid based inventory system for a game I am working on. 
 
 > NOTE! This isn't going to be an in-depth tutorial, but if you want to check the code out for yourself, the full source is availble on my github in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
 
-## Some obsatcles
-There were a couple issues I had to tackle from my earlier attempts at this. 
-- How do I make this grid in such a way, where moving the grid in world space doesn't require too much additional math to account for offsets / local vs global space?
-- How do I contain the functionality of the grid only withing the scope of the grid's container without going crazy with signals and `Area2D` nodes?
-- How do I track what grid cells are valid for the play to drop their items?
+**Here are the major obstacles I hope to show how to overcome:**
+- Getting the nodes to "snap" to the grid, without using a `GridContainer` control node. 
+- Allowing your grid to be placed anywhere in the scene means you have to do a bunch of vector math that can get a bit confusing.
+- Determining if the spot on the grid is a valid location for the item being placed.
 
-I am going to gloss over the basics of this project, such as drag & drop, and global signal buses, so I can focus on what really helped me out in getting this working.
-
+It wasn't super obvious how to solve all of these at first, and I think what I came up with in the end is pretty slick.
 # The grid
-After attempting to use Godot's built in control nodes such as `GridContainer`, I can safely say now that I would avoid these for making a grid inventory. It can be done, but it gets complicated. A much simpler approach, is to utilize a handy `Vector2` method, called [snapped( )](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2-method-snapped). You can read the docs there, but basically it takes the Vector2 you call it on, and snaps the x and y to the closest multiple of the Vector2 you pass in the `step` parameter. This is perfect for creating a "snap to grid" feel without acually "making a grid", if that makes sense.
+`Vector2` has a very handy method called [snapped( )](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2-method-snapped). Basically you call it on a Vector2, and it snaps the x and y to the closest multiple of the `Vector2` you pass in the `step` parameter. This is perfect for creating a "snap to grid" feel without acually "making a grid".
 
-(gif of grid snapping here)
+Here is a quick example to throw onto a `Sprite2D` that will follow the mouse.
 
-Using `Vector2.snapped()` in combination with [Rect2](https://docs.godotengine.org/en/stable/classes/class_rect2.html) is the perfect combination here. `Rect2` allows you to do boundaries checks within a rectangular 2d space. The reason I know this is handy, is I previously implemented my own logic for determining if a node was within the grid bounds, using only the global position of the origin, and some math to determine the area required for the item to fit in the grid based on its size. It's do able, but ends up a bit messy. This use case is actually exactly what `Rect2` is designed for. So, here in my `inventory.gd` script, I am using it for some boundary checks. I also have gone ahead and drawn a simple grid based on my grid's dimensions.
-_inventory.gd_
 ```gdscript
-class_name Inventory
-extends Node2D
-
-@export var grid_size: Vector2 = Vector2(5,5)
-@export var cell_size: Vector2 = Vector2(128,128)
-
-var inventory_list: Array
-
-func _draw() -> void:
-	# draw the grid based on grid_size & cell_size
-	for row in range(grid_size.y + 1):
-		draw_line(Vector2(0, cell_size.y * row), Vector2(cell_size.x * grid_size.x, cell_size.x * row),Color.ALICE_BLUE, 2.0, false)
-	for col in range(grid_size.x + 1):
-		draw_line(Vector2(cell_size.x * col, 0), Vector2(cell_size.x * col, cell_size.y * grid_size.y), Color.ALICE_BLUE, 2.0, false)
-
-## Returns true if a position is in bounds of the grid, and accounts for the area of the item at that position
-func in_bounds(position: Vector2, area: Vector2) -> bool:
-	var margin = cell_size / 2
-	var grid_rect = Rect2(global_position - margin, grid_size * cell_size + margin * 2)
-	var item_rect = Rect2(position, area)
-	return grid_rect.encloses(item_rect)
-
-func add_to_inventory(item) -> void:
-	inventory_list.append(item)
-
-func remove_from_inventory(item) -> void:
-	inventory_list.erase(item)
-```
-
-
-# Some basics
-So obviously the first thing to tackle is clicking and dragging if we are going to make an interface for a player to arrange objects on a grid. This is the easy part, I ended up using a button attached to my Item node that matches the size of the sprite using a tool scirpt, but theres a couple ways to approach this one. I particularly like this way of leveraging a control node for the click interaction, because I can just use the built in `button_up` / `button_down` signals. Here's what that looks like.
-
-_item.gd_
-```gdscript
-@tool
-class_name Item
-extends Node2D
-
-@export var handle: Button
-@export var item_sprite: Texture2D:
-	set(value):
-		item_sprite = value
-		if %Sprite:
-			%Sprite.texture = value
-@export var item_sprite_size: Vector2 = Vector2(128,128)
-
-var dragging: bool = false
-var offset: Vector2 = Vector2.ZERO
-
-func _ready() -> void:
-	handle.size = item_sprite_size
-	handle.position = -item_sprite_size * .5
-	
-func _process(delta):
-	if dragging:
-		position = get_global_mouse_position() - offset
-
-func _on_handle_button_down() -> void:
-	dragging = true
-	top_level = true
-	offset = get_global_mouse_position() - global_position
-
-func _on_handle_button_up() -> void:
-	dragging = false
-	top_level = false
-
-```
-I'm glossing over some details here (and will continue to do so throughout this post!), but I also exported the sprite so I can just use this Item node as a instanced scene later, and just toss whatever sprite on the instance. Later I could even dump all that into a resource, but let's not get ahead of ourselves.
-
-# The secret sauce
-Now, we are going to need this item to snap to the grid. Somehow I had gone this long (I don't know, like 5 years of Godot tinkering?) without realizing that Vector2 has a method called [snapped( )](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2-method-snapped). You can read the docs there, but basically it takes the Vector2 you call it on, and snaps the x and y to the closest multiple of the Vector2 you pass in the `step` parameter. 
-
-You can totally add this `snapped()` movement logic to the `item.gd` code I wrote above and have the item snap to different grid cells as you drag it around, but I wanted something a little different. In my case, I wanted the item node the player is dragging around to match the mouse movements exactly. Underneath this node, I wanted to show a preview of where the item would be placed as well, and THAT node's position should be snapped to the grid.
-
-So, I made a seperate script for an ItemPreview node
-
-_item_preview.gd_
-```gdscript
-class_name ItemPreview 
-extends Node2D
+extends Sprite2D
 
 @export var snap: int = 128
 
-var dragging: bool = false
-var parent_item: Item
-
-## position of the SubViewportContainer in main scene space.
-var container_position: Vector2
-
-func _ready() -> void:
-	InventoryEvents.drag_started.connect(show_preview)
-	InventoryEvents.drag_stopped.connect(hide_preview)
-	container_position = get_viewport().get_parent().global_position
-
 func _process(delta):
-	if dragging:
-		var grid_origin = %Inventory.global_position
-		var pos = scene_to_viewport(parent_item.get_origin_offset())
-		var local_pos = pos - grid_origin
-		var snapped_local = Vector2(snapped(local_pos.x, snap), snapped(local_pos.y, snap))
-		global_position = grid_origin + snapped_local + (parent_item.get_item_sprite_size() / 2)
+	var snapped = Vector2(snapped(get_global_mouse_position().x, snap), snapped(get_global_mouse_position().y, snap))
+	global_position = snapped + Vector2(64,64)
 
 ```
 
-As you may have noticed, this code is referencing a `SubViewportContainer`... and that is the second part of this secret sauce of mine. 
+![snapped example](/images/posts/snapped_ex.gif "snapped example") 
 
-## SubViewport magic
-In my previous iterations, I was finding it annoying when I made a grid, and I wanted to reposition it on the screen, I would have to do all this extra math to figure out where the Item is supposed to be dropped in global space. Then I remembered a [ fantasitc talk ](https://www.youtube.com/watch?v=cwZGq1qJYoQ) from Godotcon a few years back, done by Raffaele Picca, about how amazing SubViewports can be for so many use cases. 
-
-What I ended up doing was putting my `Inventory` node inside of a `SubViewport`, and simply supplying the method to get the grid coordinate of the local scene inside the `SubViewport`, from a global position outside of the `SubViewport`.
+Making use of [Rect2](https://docs.godotengine.org/en/stable/classes/class_rect2.html) here allows us to do boundary checks within a rectangular 2d space. This allows us to avoid a lot of math to figure out if the item being dragged is overlapping the grid. Here I have given my grid dimentions to `Rect2`, and I've drawn a simple grid with that data as well.
 
 _inventory.gd_
 ```gdscript
@@ -160,10 +58,6 @@ func in_bounds(position: Vector2, area: Vector2) -> bool:
 	var item_rect = Rect2(position, area)
 	return grid_rect.encloses(item_rect)
 
-## Get grid coord from global position
-func global_to_grid(position: Vector2) -> Vector2i:
-	return Vector2i((position - global_position) / cell_size)
-
 func add_to_inventory(item) -> void:
 	inventory_list.append(item)
 
@@ -171,55 +65,92 @@ func remove_from_inventory(item) -> void:
 	inventory_list.erase(item)
 ```
 
-The benfits of this are actually two fold! I now have no need to worry about making sure my `ItemPreview` node is only visible when the node is overlapping the grid. I simply set the visibility of the `ItemPreview` node to true when the player is dragging the item. Since I can make the SubViewport's size to be equal to the grid's size, the preview effect will never be visible when the node is not overlapping with the grid.
+## SubViewport magic
+I remembered a [ fantasitc talk ](https://www.youtube.com/watch?v=cwZGq1qJYoQ) from Godotcon a few years back, done by Raffaele Picca, about how amazing SubViewports can be for so many use cases. This inspired me to use one for my "grid container" (not to be confused with `GridContainer` the control node).
 
-We also need to give some help to the `ItemPreview`, so it can figure out where it is.
-_item_preview.gd_
-```gdscript
-...
-## position of the SubViewportContainer in main scene space.
-var container_position: Vector2
-
-func _ready() -> void:
-	InventoryEvents.drag_started.connect(show_preview)
-	InventoryEvents.drag_stopped.connect(hide_preview)
-	InventoryEvents.rotated.connect(rotate_preview)
-	container_position = get_viewport().get_parent().global_position
-
-...
-## convert main scene position to SubViewport position.
-func scene_to_viewport(pos: Vector2) -> Vector2:
-	return pos - container_position
-
-## convert SubViewport position to main scene position.
-func viewport_to_scene(pos: Vector2) -> Vector2:
-	return pos + container_position
-
-```
-
-So at this point my Scenetree looks like this.
+So I've got an `Inventory` node inside of a `SubViewport`, which makes my Scenetree look like this 
 ```
 > Node2D
 	> SubViewportContainer
 		> SubViewport
-			> Inventory
-			> InventoryPreview
-	> Item
-	> Item 2
+			> Inventory (insanced scene)
+			> InventoryPreview (instanced scene)
+	> Item (instanced scene)
+	> Item 2 (instanced scene)
 	...
 ```
 
+And now, I bring the snapped `ItemPreview` and SubViewportContainer magic together. The `ItemPreview` ends up doing a lot of the work here. 
 
-Okay! I glossed over a lot there, so... as for how the `ItemPreview` knows what to do, I'm using a global event bus to listen for the player dragging an `Item`, dropping and `Item`, and rotating and `Item`... yeah I didn't go over rotation either but that's not very interesting. I'll tell ya what is interesting...
+The `ItemPreview`'s texture is assigned the texture of the `Item` being dragged:
 
-# Where we droppin' though
-Figuring out how to manage where you are allowed to drop an `Item`, and how to keep track of it was the real part that drove me insane in the early iterations. I was trying a data-first approach, storing the node refs in a multi-dimensional array that represented the grid. Then I was using that array to check if there were collisions with other nodes on the desired drop position for the `Item` and.... yeah don't do that. You know what you should do?
+_item_preview.gd_
+```gdscript
+...
+var dragging: bool = false
+var parent_item: Item
 
-Just use `Area2D` and `CollisionShape` _facepalm_
+func _ready() -> void:
+	InventoryEvents.drag_started.connect(show_preview)
+	InventoryEvents.drag_stopped.connect(hide_preview)
 
-Each item gets an `Area2D`, and tracks how many collsions are happening at a given time. Then you just check if the collision count is not zero. And yes, you'll want to use a count of collisions specifically though, not just a boolean that is flipped when the `area_entered` and `area_exited` signals are fired. Since you can have multiple collisions at one time, things get weird without a collision count.
+## shows a snapped copy of the item being dragged.
+func show_preview(item: Node, texture: Texture2D) -> void:
+	parent_item = item
+	%Preview.texture = parent_item.item_sprite
+	%Preview.rotation_degrees = parent_item.get_item_rotation()
+	dragging = true
+	visible = true
 
-So... we add these to
+## hides the preview of the dragged item. used when dragging has stopped.
+func hide_preview(position: Vector2) -> void:
+	if in_grid_bounds():
+		if !parent_item.colliding:
+			parent_item.global_position = viewport_to_scene(global_position)
+	parent_item = null
+	dragging = false
+	visible = false
+
+## helper for inventory's grid bound check on current item being held.
+func in_grid_bounds() -> bool:
+	var item_origin = scene_to_viewport(parent_item.get_origin_offset())
+	if %Inventory.in_bounds(item_origin, parent_item.get_item_sprite_size()):
+		return true
+	else:
+		return false
+```
+Then, the position of the preview is determined by translating the global_position the the viewport's position:
+
+_item_preview.gd_
+```gdscript
+...
+func _process(delta):
+	if dragging:
+		var pos = scene_to_viewport(parent_item.get_origin_offset())
+		var snapped_local = Vector2(snapped(pos.x, snap), snapped(pos.y, snap))
+		global_position = snapped_local + (parent_item.get_item_sprite_size() / 2)
+		if !in_grid_bounds() || parent_item.colliding:
+			visible = false
+		else:
+			visible = true
+
+## convert main scene position to SubViewport position.
+func scene_to_viewport(pos: Vector2) -> Vector2:
+	return pos - container_position
+```
+
+
+The benfits of this are actually two fold! I now have no need to worry about making sure my `ItemPreview` node is only visible when the node is overlapping the grid. I simply set the visibility of the `ItemPreview` node to true when the player is dragging the item. Since I can make the SubViewport's size to be equal to the grid's size, the preview effect will never be visible when the node is not overlapping with the grid.
+
+
+# Where we droppin'
+Determining if an item is allowed to be placed on a section of the grid is something I found can easily be over thought by the developer (hey that's me!). I was tempted to try a data-driven approach, reprenting my grid with a 2 dimensional array, where the array indicies would represent the grid's coordinates. I thought "yeah, then I'll definitely know every cell that is populated, and what its populated by! no need to leave it up to collision detection".
+
+Except... turns out `Area2D` with a `CollsionShape2D` actually is... kind of a perfect way to do it. 
+>You don't really want to be figuring out which grid cell coordinates you item overlaps based on it size and position, and checking those indicies in the 2D array EVERY frame, do you? 
+
+You'll want to use the `Area2D.area_entered` and `Area2D.area_exited` signals to count how many collisions are happening at a given time. 
+
 _item.gd_
 ```gdscript
 ...
@@ -251,17 +182,11 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 
 ```
 
-... and check it on _item_preview.gd_
+... and check it on `ItemPreview`. If there are no collisions when dropped, that means it's valid, and we can update the position of the dragged `Item` to be the same `global_position` as the `ItemPreview`'s
+
+_item_preview.gd_
 ```gdscript
 ... 
-
-## shows a snapped copy of the item being dragged.
-func show_preview(item: Node, texture: Texture2D) -> void:
-	parent_item = item
-	%Preview.texture = parent_item.item_sprite
-	%Preview.rotation_degrees = parent_item.get_item_rotation()
-	dragging = true
-	visible = true
 
 ## hides the preview of the dragged item. used when dragging has stopped.
 func hide_preview(position: Vector2) -> void:
@@ -273,8 +198,11 @@ func hide_preview(position: Vector2) -> void:
 	visible = false
 
 ```
-To give the player a little bit of wiggle room to be less precise with their placement, you can also shrink the collision shapes a bit (origin at the center of the shape) to give it some margins.
+You can also shrink the collision shapes a bit (origin at the center of the shape) to give it some margins. This way, the player does not have to be pixel perfect to put the `Item` in the slot.
 
-And just like that, not tracking of node refs in any arrays, just pure collision logic. Then all you need to track is one array that has all items that were dropped in valid locations as signals are fired off.
 
-Oh right, and to answer the age old of question of where we're droppin' (boys)... well we've already figured out the position of the snapped grid cell for the `ItemPreview`, so just set the item's global position to that of the `ItemPreviews`!
+![grid inventory complete](/images/posts/grid_inv_complete.gif "grid inventory complete") 
+
+And there it is, no 2 dimensional array needed, the grid can be moved anywhere in the scene and always act properly, and the code is nice and simple to expand upon :) 
+
+If you want to check out the full code to see some of the details I left out like the object rotation and `InventoryEvents` global signal bus, I have it hosted in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory) on github.
