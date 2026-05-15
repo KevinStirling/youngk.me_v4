@@ -1,7 +1,7 @@
 +++
 title = 'Building a Grid Inventory System in Godot'
 date = 2026-05-13T20:29:02-04:00
-draft = false
+draft = true
 tags = ["godot4"]
 +++
 # What's huh?
