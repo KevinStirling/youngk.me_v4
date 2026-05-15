@@ -9,10 +9,10 @@ I discovered some nice tricks in godot that allowed me to create a pretty simple
 
 > NOTE! This isn't going to be an in-depth tutorial, but if you want to check the code out for yourself, the full source is available on my github in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
 
-**Here are the major obstacles I hope to show how to overcome:**
+**I'd like to cover what I found to be the 3 key parts to getting this right:**
 - Getting the nodes to "snap" to the grid, without using a `GridContainer` control node. 
-- Allowing your grid to be placed anywhere in the scene means you have to do a bunch of vector math that can get a bit confusing.
-- Determining if the spot on the grid is a valid location for the item being placed.
+- Allowing your grid to be placed anywhere in the scene, without having to do a bunch of vector translations.
+- Determining which cells on the grid are a valid drop location.
 
 It wasn't super obvious how to solve all of these at first, and I think what I came up with in the end is pretty slick.
 # The grid
