@@ -2,6 +2,7 @@
 title = 'Building a Grid Inventory System in Godot'
 date = 2026-05-13T20:29:02-04:00
 draft = true
+tags = ["godot4"]
 +++
 # What's huh?
 I discovered some nice tricks in godot that allowed me to create a pretty simple "Resident evil style" grid based inventory system for a game I am working on. 
