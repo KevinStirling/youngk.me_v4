@@ -150,7 +150,7 @@ The benefits of this are actually two fold! I now have no need to worry about ma
 # Where we droppin'
 Determining if an item is allowed to be placed on a section of the grid is something I found can easily be overthought by the developer (hey that's me!). I was tempted to try a data-driven approach, reprenting my grid with a 2 dimensional array, where the array indices would represent the grid's coordinates... and uhm... yeah it felt silly pretty fast.
 
-Turns out the simple method of using `Area2D` with a `CollisionShape2D` actually is a perfect way to do it. 
+Turns out the simple method of using `Area2D` with a `CollisionShape2D` is actually a perfect way to do it. 
 >You don't really want to be figuring out which grid cell coordinates your item overlaps based on its size and position, and checking those indices in the 2D array EVERY frame, do you? 
 
 You'll want to use the `Area2D.area_entered` and `Area2D.area_exited` signals to count how many collisions are happening at any given time. 
