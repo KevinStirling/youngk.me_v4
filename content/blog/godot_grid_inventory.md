@@ -15,10 +15,10 @@ Before I dig into the details, let me just set the scene for how this is going t
 > Node2D
 	> SubViewportContainer
 		> SubViewport
-			> Inventory (instanced scene)
-			> InventoryPreview (instanced scene)
-	> Item (instanced scene)
-	> Item 2 (instanced scene)
+			> Inventory
+			> InventoryPreview
+	> Item
+	> Item
 	...
 ```
 `Item` nodes exist outside of the container that holds the `Inventory` node, and is what the player drags around the screen.
