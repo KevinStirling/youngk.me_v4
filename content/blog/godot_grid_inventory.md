@@ -7,7 +7,7 @@ tags = ["godot4"]
 # What's huh?
 I discovered some nice tricks in godot that allowed me to create a pretty simple "Resident evil style" grid based inventory system for a game I am working on. 
 
-> NOTE! This isn't going to be an in-depth tutorial, but if you want to check the code out for yourself, the full source is available on my github in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
+> NOTE! This isn't an in-depth tutorial, but the full source available in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
 
 ## The Scenetree
 Before I dig into the details, let me just set the scene for how this is going to work. My Scenetree looks like this
