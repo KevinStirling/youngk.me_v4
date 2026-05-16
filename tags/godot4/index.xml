@@ -78,8 +78,7 @@ The Scenetree Before I dig into the details, let me just set the scene for how t
 </span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="kd">func</span> <span class="nf">remove_from_inventory</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span><span class="p">:</span>
 </span></span><span class="line"><span class="ln">27</span><span class="cl">	<span class="n">inventory_list</span><span class="o">.</span><span class="nf">erase</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></span></span></code></pre></div><h2 id="subviewport-magic">SubViewport magic</h2>
 <p>I remembered a <a href="https://www.youtube.com/watch?v=cwZGq1qJYoQ">fantastic talk</a> from Godotcon a few years back, done by Raffaele Picca, about how amazing SubViewports can be for so many use cases. This inspired me to use one for my &ldquo;grid container&rdquo; (not to be confused with <a href="https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html">GridContainer</a>).</p>
-<p>And now, I bring the snapped <code>ItemPreview</code> and <code>SubViewportContainer</code> magic together. The <code>ItemPreview</code> ends up doing a lot of the work here.</p>
-<p>The <code>ItemPreview</code>&rsquo;s texture is assigned the texture of the <code>Item</code> being dragged:</p>
+<p>The <code>ItemPreview</code> is assigned the texture and position data of the <code>Item</code> being dragged:</p>
 <p><em>item_preview.gd</em></p>
 
 
