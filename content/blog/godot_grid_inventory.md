@@ -86,9 +86,7 @@ func remove_from_inventory(item) -> void:
 ## SubViewport magic
 I remembered a [fantastic talk](https://www.youtube.com/watch?v=cwZGq1qJYoQ) from Godotcon a few years back, done by Raffaele Picca, about how amazing SubViewports can be for so many use cases. This inspired me to use one for my "grid container" (not to be confused with [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html)).
 
-And now, I bring the snapped `ItemPreview` and `SubViewportContainer` magic together. The `ItemPreview` ends up doing a lot of the work here. 
-
-The `ItemPreview`'s texture is assigned the texture of the `Item` being dragged:
+The `ItemPreview` is assigned the texture and position data of the `Item` being dragged:
 
 _item_preview.gd_
 ```gdscript
