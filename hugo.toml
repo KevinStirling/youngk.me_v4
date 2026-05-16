@@ -77,4 +77,4 @@ enableRobotsTXT = true
   # email is also added to the footer of each post
   [params.author]
     name = "Kevin Young" # Your name as shown in the RSS feed metadata
-    email = "youngks93@gmail.com" # Added to the footer so readers can reply to posts
+    email = "hey@kyoung.codes" # Added to the footer so readers can reply to posts
