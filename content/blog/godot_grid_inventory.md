@@ -1,7 +1,7 @@
 +++
 title = 'Building a Grid Inventory System in Godot'
-date = 2026-05-13T20:29:02-04:00
-draft = true
+date = 2026-05-16T20:29:02-04:00
+draft = false
 tags = ["godot4"]
 +++
 # What's huh?
@@ -9,14 +9,31 @@ I discovered some nice tricks in godot that allowed me to create a pretty simple
 
 > NOTE! This isn't going to be an in-depth tutorial, but if you want to check the code out for yourself, the full source is available on my github in my [godot tools collection](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
 
-**I'd like to cover what I found to be the 3 key parts to getting this right:**
-- Getting the nodes to "snap" to the grid, without using a `GridContainer` control node. 
+## The Scenetree
+Before I dig into the details, let me just set the scene for how this is going to work. My Scenetree looks like this
+```
+> Node2D
+	> SubViewportContainer
+		> SubViewport
+			> Inventory (instanced scene)
+			> InventoryPreview (instanced scene)
+	> Item (instanced scene)
+	> Item 2 (instanced scene)
+	...
+```
+`Item` nodes exist outside of the container that holds the `Inventory` node, and is what the player drags around the screen.
+
+`Inventory` exists inside of a `SubViewport`, meaning it's a scene rendered in a seperate space, and projected into the main `Viewport`.
+
+`ItemPreview` will act as the "shadow" of the `Item`, and shows the player where the `Item` will be placed if dropped. This is what will be snapping to the grid, while the `Item` is always following the exact mouse poition.
+
+
+**I'll be covering what I found to be the 3 key parts to getting this right:**
+- Getting the nodes to "snap" to the grid. 
 - Allowing your grid to be placed anywhere in the scene, without having to do a bunch of vector translations.
 - Determining which cells on the grid are a valid drop location.
-
-It wasn't super obvious how to solve all of these at first, and I think what I came up with in the end is pretty slick.
 # The grid
-`Vector2` has a very handy method called [snapped( )](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2-method-snapped). Basically you call it on a Vector2, and it snaps the x and y to the closest multiple of the `Vector2` you pass in the `step` parameter. This is perfect for creating a "snap to grid" feel without actually "making a grid".
+`Vector2` has a very handy method called [snapped( )](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2-method-snapped). When you call it on a Vector2, it snaps the x and y to the closest multiple of the `Vector2` you pass in the `step` parameter. This is perfect for creating a "snap to grid" feeling.
 
 Here is a quick example to throw onto a `Sprite2D` that will follow the mouse.
 
@@ -67,21 +84,9 @@ func remove_from_inventory(item) -> void:
 ```
 
 ## SubViewport magic
-I remembered a [fantastic talk](https://www.youtube.com/watch?v=cwZGq1qJYoQ) from Godotcon a few years back, done by Raffaele Picca, about how amazing SubViewports can be for so many use cases. This inspired me to use one for my "grid container" (not to be confused with `GridContainer` the control node).
+I remembered a [fantastic talk](https://www.youtube.com/watch?v=cwZGq1qJYoQ) from Godotcon a few years back, done by Raffaele Picca, about how amazing SubViewports can be for so many use cases. This inspired me to use one for my "grid container" (not to be confused with [GridContainer](https://docs.godotengine.org/en/stable/classes/class_gridcontainer.html)).
 
-So I've got an `Inventory` node inside of a `SubViewport`, which makes my Scenetree look like this 
-```
-> Node2D
-	> SubViewportContainer
-		> SubViewport
-			> Inventory (instanced scene)
-			> InventoryPreview (instanced scene)
-	> Item (instanced scene)
-	> Item 2 (instanced scene)
-	...
-```
-
-And now, I bring the snapped `ItemPreview` and SubViewportContainer magic together. The `ItemPreview` ends up doing a lot of the work here. 
+And now, I bring the snapped `ItemPreview` and `SubViewportContainer` magic together. The `ItemPreview` ends up doing a lot of the work here. 
 
 The `ItemPreview`'s texture is assigned the texture of the `Item` being dragged:
 
@@ -145,9 +150,9 @@ The benefits of this are actually two fold! I now have no need to worry about ma
 
 
 # Where we droppin'
-Determining if an item is allowed to be placed on a section of the grid is something I found can easily be overthought by the developer (hey that's me!). I was tempted to try a data-driven approach, reprenting my grid with a 2 dimensional array, where the array indices would represent the grid's coordinates. I thought "yeah, then I'll definitely know every cell that is populated, and what it's populated by! no need to leave it up to collision detection".
+Determining if an item is allowed to be placed on a section of the grid is something I found can easily be overthought by the developer (hey that's me!). I was tempted to try a data-driven approach, reprenting my grid with a 2 dimensional array, where the array indices would represent the grid's coordinates... and uhm... yeah it felt silly pretty fast.
 
-Except... turns out `Area2D` with a `CollisionShape2D` actually is... kind of a perfect way to do it. 
+Turns out the simple method of using `Area2D` with a `CollisionShape2D` actually is a perfect way to do it. 
 >You don't really want to be figuring out which grid cell coordinates your item overlaps based on its size and position, and checking those indices in the 2D array EVERY frame, do you? 
 
 You'll want to use the `Area2D.area_entered` and `Area2D.area_exited` signals to count how many collisions are happening at any given time. 
@@ -206,4 +211,4 @@ You can also shrink the collision shapes a bit (origin at the center of the shap
 
 And there it is in action!
 
-If you want to check out the full code to see some of the details I left out, such as the object rotation, click & drag, and the `InventoryEvents` global signal bus, you can check it out [here](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).
+I glossed over a lot, such as the object rotation, click & drag, and the `InventoryEvents` global signal bus, but you can check out the full source [here](https://github.com/KevinStirling/godot-tools/tree/main/components/grid_inventory).

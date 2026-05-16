@@ -6,9 +6,8 @@ weight: 1
 
 # Writer of code, drinker of seltzer 🥤
 
-When I am not building full stack web applications for **[Throtle](https://throtle.io/)**, I can be found creating things with the **[Godot Engine](https://godotengine.org/)**, **[Go](https://go.dev)**, and whatever new tech catches my eye.
+I like making things, mostly with **[Godot](https://godotengine.org/)** and **[Golang](https://go.dev)**. I yearn for the simpler times.
 
-I write about my experiences making games and web technology on my **[blog](/blog)**!
 
 ## Links ✨
 
