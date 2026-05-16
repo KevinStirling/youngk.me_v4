@@ -50,10 +50,10 @@ The Scenetree Before I dig into the details, let me just set the scene for how t
 <pre tabindex="0"><code>&gt; Node2D
 	&gt; SubViewportContainer
 		&gt; SubViewport
-			&gt; Inventory (instanced scene)
-			&gt; InventoryPreview (instanced scene)
-	&gt; Item (instanced scene)
-	&gt; Item 2 (instanced scene)
+			&gt; Inventory
+			&gt; InventoryPreview
+	&gt; Item
+	&gt; Item
 	...</code></pre><p><code>Item</code> nodes exist outside of the container that holds the <code>Inventory</code> node, and is what the player drags around the screen.</p>
 <p><code>Inventory</code> exists inside of a <code>SubViewport</code>, meaning it&rsquo;s a scene rendered in a seperate space, and projected into the main <code>Viewport</code>.</p>
 <p><code>ItemPreview</code> will act as the &ldquo;shadow&rdquo; of the <code>Item</code>, and shows the player where the <code>Item</code> will be placed if dropped. This is what will be snapping to the grid, while the <code>Item</code> is always following the exact mouse poition.</p>
