@@ -11,7 +11,7 @@ I like making things, mostly with **[Godot](https://godotengine.org/)** and **[G
 
 ## Links ✨
 
-🗣️ **[Mastodon](https://mastodon.gamedev.place/@kevinyoung)**
+**{{< social-link "https://mastodon.gamedev.place/@kevinyoung" "🗣️ Mastodon" >}}**
   👨‍💻 **[Github](https://github.com/KevinStirling/)**
   🎮 **[My Games](https://necrokev.itch.io/)**
   👨‍💼**[LinkedIn](https://www.linkedin.com/in/kevin-young-5a6386b0/)**
